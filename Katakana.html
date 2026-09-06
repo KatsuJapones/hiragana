@@ -51,6 +51,7 @@
 
     <button id="checkButton">Entrega</button>
     <p id="result" class=""></p>
+    <p id="respuestaCorrecta" class="incorrecto"></p>
     <p id="equivocado"></p>
     <a href="https://katsujapones.github.io/hiragana/">Hiragana</a>
 
@@ -180,6 +181,7 @@
             // 回答が間違っていた場合
             else {
                 result.textContent = "Incorrecto...";
+                respuestaCorrecta.textContent = "Respuesta correcta: " + katakana[randomIndex].answers[0];
                 result.className = "incorrecto";
                 streak = 0;
                 equivocadosList.push(randomKatakana);
