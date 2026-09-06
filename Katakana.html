@@ -159,6 +159,7 @@
         let checkButton = document.getElementById("checkButton");
         let result = document.getElementById("result");
         let input = document.getElementById("answer");
+        let respuestaCorrecta = document.getElementById("respuestaCorrecta");
 
         checkButton.addEventListener("click", function () {
 
@@ -176,6 +177,7 @@
                 result.textContent = "¡Correcto!";
                 result.className = "correcto";
                 streak++;
+                respuestaCorrecta.textContent = "";
             }
 
             // 回答が間違っていた場合
