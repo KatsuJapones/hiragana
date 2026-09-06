@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Practica Katakana</title>
+    <style>
+        #question {
+            font-size: 5em;
+        }
+
+        body {
+            text-align: center;
+        }
+
+        .correcto {
+            color: #55FF55;
+        }
+
+        .incorrecto {
+            color: #FF5555;
+        }
+
+        .escribe {
+            color: #FF0000;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Katakana</h1>
+    <div id="question">あ</div>
+    <p id="streak">Racha: 0</p>
+    <p id="veces"></p>
+
+    <input id="answer" type="text">
+
+    <button id="checkButton">Entrega</button>
+    <p id="result" class=""></p>
+    <p id="equivocado"></p>
+    <script>
+
+        // カタカナのデータ表
+        const katakana = [
+            { char: "ア", answers: ["a"] },
+            { char: "イ", answers: ["i"] },
+            { char: "ウ", answers: ["u"] },
+            { char: "エ", answers: ["e"] },
+            { char: "オ", answers: ["o"] },
+            { char: "カ", answers: ["ka"] },
+            { char: "キ", answers: ["ki"] },
+            { char: "ク", answers: ["ku"] },
+            { char: "ケ", answers: ["ke"] },
+            { char: "コ", answers: ["ko"] },
+            { char: "サ", answers: ["sa"] },
+            { char: "シ", answers: ["si", "shi"] },
+            { char: "ス", answers: ["su"] },
+            { char: "セ", answers: ["se"] },
+            { char: "ソ", answers: ["so"] },
+            { char: "タ", answers: ["ta"] },
+            { char: "チ", answers: ["ti", "chi"] },
+            { char: "ツ", answers: ["tu", "tsu"] },
+            { char: "テ", answers: ["te"] },
+            { char: "ト", answers: ["to"] },
+            { char: "ナ", answers: ["na"] },
+            { char: "ニ", answers: ["ni"] },
+            { char: "ヌ", answers: ["nu"] },
+            { char: "ネ", answers: ["ne"] },
+            { char: "ノ", answers: ["no"] },
+            { char: "ハ", answers: ["ha"] },
+            { char: "ヒ", answers: ["hi"] },
+            { char: "フ", answers: ["hu", "fu"] },
+            { char: "ヘ", answers: ["he"] },
+            { char: "ホ", answers: ["ho"] },
+            { char: "マ", answers: ["ma"] },
+            { char: "ミ", answers: ["mi"] },
+            { char: "ム", answers: ["mu"] },
+            { char: "メ", answers: ["me"] },
+            { char: "モ", answers: ["mo"] },
+            { char: "ヤ", answers: ["ya"] },
+            { char: "ユ", answers: ["yu"] },
+            { char: "ヨ", answers: ["yo"] },
+            { char: "ラ", answers: ["ra"] },
+            { char: "リ", answers: ["ri"] },
+            { char: "ル", answers: ["ru"] },
+            { char: "レ", answers: ["re"] },
+            { char: "ロ", answers: ["ro"] },
+            { char: "ワ", answers: ["wa"] },
+            { char: "ヲ", answers: ["wo", "o"] },
+            { char: "ン", answers: ["n", "nn"] },
+            { char: "ガ", answers: ["ga"] },
+            { char: "ギ", answers: ["gi"] },
+            { char: "グ", answers: ["gu"] },
+            { char: "ゲ", answers: ["ge"] },
+            { char: "ゴ", answers: ["go"] },
+            { char: "ザ", answers: ["za"] },
+            { char: "ジ", answers: ["zi", "ji"] },
+            { char: "ズ", answers: ["zu"] },
+            { char: "ゼ", answers: ["ze"] },
+            { char: "ゾ", answers: ["zo"] },
+            { char: "ダ", answers: ["da"] },
+            { char: "デ", answers: ["de"] },
+            { char: "ド", answers: ["do"] },
+            { char: "バ", answers: ["ba"] },
+            { char: "ビ", answers: ["bi"] },
+            { char: "ブ", answers: ["bu"] },
+            { char: "ベ", answers: ["be"] },
+            { char: "ボ", answers: ["bo"] },
+            { char: "パ", answers: ["pa"] },
+            { char: "ピ", answers: ["pi"] },
+            { char: "プ", answers: ["pu"] },
+            { char: "ペ", answers: ["pe"] },
+            { char: "ポ", answers: ["po"] },
+
+        ];
+
+        // ランダムなカタカナを生成
+        let randomIndex = Math.floor(Math.random() * katakana.length);
+        let randomKatakana = katakana[randomIndex].char;
+
+        // ランダムなカタカナを表示
+        let question = document.getElementById("question");
+        question.textContent = randomKatakana;
+
+        // もう出した問題の管理リスト
+        let usedChars = [];
+        usedChars.push(randomIndex);
+
+        // 間違えた文字のリスト
+        let equivocadosList = [];
+        let equivocados = document.getElementById("equivocado");
+
+        // ストリークの生成
+        let streakDisplay = document.getElementById("streak");
+        let streak = 0;
+
+        // やった数
+        let vecesDisplay = document.getElementById("veces");
+        let veces = 0;
+
+        // ボタンの挙動
+        let checkButton = document.getElementById("checkButton");
+        let result = document.getElementById("result");
+        let input = document.getElementById("answer");
+
+        checkButton.addEventListener("click", function () {
+
+            // ここに「回答を押したときの処理」を書く
+
+            // 空欄の時は入力するように言う
+            if (input.value === "") {
+                result.textContent = "¡Escribe algo!";
+                result.className = "escribe";
+                return;
+            }
+
+            // 回答が正解と一緒だった場合
+            if (katakana[randomIndex].answers.includes(input.value)) {
+                result.textContent = "¡Correcto!";
+                result.className = "correcto";
+                streak++;
+            }
+
+            // 回答が間違っていた場合
+            else {
+                result.textContent = "Incorrecto...";
+                result.className = "incorrecto";
+                streak = 0;
+                equivocadosList.push(randomKatakana);
+                equivocados.textContent = "Respuestas incorrectas: " + equivocadosList.join(", ");
+            }
+
+            // ストリークの表示
+            streakDisplay.textContent = "Racha: " + streak;
+
+            // 全部使ったらリセット
+            if (usedChars.length === katakana.length) {
+                usedChars = [];
+                equivocadosList = [];
+
+                // やった回数表示
+                veces++;
+                if (veces === 1) {
+                    vecesDisplay.textContent = "Hiciste  " + veces + "  vez";
+                }
+                if (veces >= 2) {
+                    vecesDisplay.textContent = "Hiciste  " + veces + "  veces";
+                }
+            }
+
+            // ランダムなカタカナを生成
+            randomIndex = Math.floor(Math.random() * katakana.length);
+
+            // 既に使われた奴なら引き直す
+            while (usedChars.includes(randomIndex)) {
+                randomIndex = Math.floor(Math.random() * katakana.length);
+            }
+            usedChars.push(randomIndex);
+
+            randomKatakana = katakana[randomIndex].char;
+
+            // ランダムなカタカナを表示
+            question.textContent = randomKatakana;
+
+            // 入力欄をリセットする
+            input.value = "";
+        });
+
+        // エンターで入力される仕組み
+        input.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                checkButton.click();
+            }
+        });
+
+    </script>
+</body>
+
+</html>
