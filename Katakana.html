@@ -183,7 +183,7 @@
             // 回答が間違っていた場合
             else {
                 result.textContent = "Incorrecto...";
-                respuestaCorrecta.textContent = "Respuesta correcta: " + katakana[randomIndex].answers[0];
+                respuestaCorrecta.textContent = "Respuesta correcta: " + katakana[randomIndex].char + " = " + katakana[randomIndex].answers[0];
                 result.className = "incorrecto";
                 streak = 0;
                 equivocadosList.push(randomKatakana);
