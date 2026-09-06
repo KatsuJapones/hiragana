@@ -156,7 +156,7 @@
             }
 
             // 回答が正解と一緒だった場合
-            if (katakana[randomIndex].answers.includes(input.value)) {
+            if (katakana[randomIndex].answers.includes(input.value.toLowerCase())) {
                 result.textContent = "¡Correcto!";
                 result.className = "correcto";
                 streak++;

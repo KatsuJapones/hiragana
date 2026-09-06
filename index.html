@@ -155,7 +155,7 @@
             }
 
             // 回答が正解と一緒だった場合
-            if (hiragana[randomIndex].answers.includes(input.value)) {
+            if (hiragana[randomIndex].answers.includes(input.value.toLowerCase())) {
                 result.textContent = "¡Correcto!";
                 result.className = "correcto";
                 streak++;
