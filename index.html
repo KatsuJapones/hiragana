@@ -51,6 +51,7 @@
 
     <button id="checkButton">Entrega</button>
     <p id="result" class=""></p>
+    <p id="respuestaCorrecta" class="incorrecto"></p>
     <p id="equivocado"></p>
     <a href="https://katsujapones.github.io/hiragana/Katakana.html">Katakana</a>
     <script>
@@ -157,6 +158,7 @@
         let checkButton = document.getElementById("checkButton");
         let result = document.getElementById("result");
         let input = document.getElementById("answer");
+        let respuestaCorrecta = document.getElementById("respuestaCorrecta");
 
         checkButton.addEventListener("click", function () {
 
@@ -174,11 +176,13 @@
                 result.textContent = "¡Correcto!";
                 result.className = "correcto";
                 streak++;
+                respuestaCorrecta.textContent = "";
             }
 
             // 回答が間違っていた場合
             else {
                 result.textContent = "Incorrecto...";
+                respuestaCorrecta.textContent = "Respuesta correcta: " + hiragana[randomIndex].char + " = " + hiragana[randomIndex].answers[0];
                 result.className = "incorrecto";
                 streak = 0;
                 equivocadosList.push(randomHiragana);
