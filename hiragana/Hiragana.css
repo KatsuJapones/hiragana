@@ -1,0 +1,245 @@
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+*:not(dialog) {
+    margin: 0;
+}
+
+/* 3. Enable keyword animations */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        interpolate-size: allow-keywords;
+    }
+}
+
+body {
+    /* 4. Increase line-height */
+    line-height: 1.5;
+    /* 5. Improve text rendering */
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 6. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+/* 7. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+/* 8. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+}
+
+/* 9. Improve line wrapping */
+p {
+    text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-wrap: balance;
+}
+
+/*
+  10. Create a root stacking context
+*/
+#root,
+#__next {
+    isolation: isolate;
+}
+
+
+/* ================================ 自分のcss ================================ */
+:root {
+    --textColor: #00035e;
+}
+
+body {
+    text-align: center;
+    background: #a0d8ef;
+}
+
+#window {
+    width: 60%;
+    min-height: 100vh;
+    margin: 0 auto;
+    background: #fafafa;
+}
+
+/* ==== header ==== */
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.gato {
+    width: 54px;
+    height: 74px;
+}
+
+h1 {
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--textColor);
+}
+
+/* ==== Streak処理 ==== */
+#racha {
+    display: flex;
+    justify-content: space-around;
+}
+
+.streak-message {
+    color: #75a5ca;
+}
+
+.streak-number {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--textColor);
+}
+
+#streak {
+    display: flex;
+    justify-content: center;
+    background: #e5f4ff;
+    border-radius: 16px;
+    padding: 16px 24px;
+    gap: 24px;
+    width: 25%;
+}
+
+.fire {
+    width: 29px;
+    height: 36px;
+    transform: translateY(10px);
+}
+
+.clown {
+    width: 43px;
+    height: 36px;
+    transform: translateY(10px);
+}
+
+.make-it-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==== question-window ==== */
+#question-window {
+    box-shadow: 3px 3px 7px #e0effa, -3px -3px 7px #e0effa;
+    border-radius: 16px;
+    width: 80%;
+    margin: 24px auto;
+    padding: 24px 0;
+}
+
+#question {
+    font-size: 5em;
+    color: var(--textColor);
+}
+
+#checkButton {
+    display: none;
+}
+
+/* ==== 回答欄 ==== */
+#answer {
+    border: 2px solid #b5e5ea;
+    border-radius: 8px;
+    padding: 8px 16px;
+    width: 70%;
+}
+
+#answer:focus {
+    outline: none;
+    border: 2px solid #a5d5da;
+}
+
+#answer:hover {
+    border: 2px solid #a5d5da;
+}
+
+input::placeholder {
+    font-size: 0.9rem;
+    color: #89b9de;
+}
+
+/* ==== result-window ==== */
+.correcto {
+    color: #55FF55
+}
+
+.incorrecto {
+    color: #FF5555
+}
+
+.escribe {
+    color: #FF0000
+}
+
+@media (max-width: 600px) {
+    #window {
+        width: 100%;
+    }
+
+    #question {
+        font-size: 8em;
+    }
+
+    #answer {
+        font-size: 16px;
+    }
+
+    .fire {
+        width: 14.5px;
+        height: 18px;
+    }
+
+    .clown {
+        width: 21.5px;
+        height: 18px;
+    }
+
+    #streak {
+        width: 40%;
+    }
+
+    .streak-message {
+        font-size: 0.6rem;
+    }
+
+    .streak-number {
+        font-size: 1.0rem;
+    }
+}

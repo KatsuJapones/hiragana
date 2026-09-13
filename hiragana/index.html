@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Practica Hiragana</title>
+    <script src="https://kit.fontawesome.com/73cdc631b4.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./Hiragana.css">
+</head>
+
+<body>
+    <div id="window">
+        <header>
+            <img class="gato" src="gato.png" />
+            <h1>Hiragana</h1>
+        </header>
+        <div id="racha">
+            <div id="streak">
+                <img class="fire" src="fire.png" />
+                <div class="make-it-column">
+                    <p class="streak-message">Racha Actual</p>
+                    <p id="current-streak-js" class="streak-number">0</p>
+                </div>
+            </div>
+            <div id="streak">
+                <img class="clown" src="clown.png" />
+                <div class="make-it-column">
+                    <p class="streak-message">Racha Maximo</p>
+                    <p id="max-streak-js" class="streak-number">0</p>
+                </div>
+            </div>
+        </div>
+        <div id="question-window">
+            <p id="question">あ</p>
+            <p id="veces"></p>
+
+
+            <input id="answer" type="text" placeholder="Escribe tu respuesta...">
+
+            <button id="checkButton">Entrega</button>
+            <div id="result-window">
+                <p id="result" class=""></p>
+                <p id="mistake-hiragana" class="incorrecto"></p>
+                <p id="tu-respuesta" class="incorrecto"></p>
+                <p id="respuesta-correcta" class="incorrecto"></p>
+            </div>
+            <p id="equivocado"></p>
+        </div>
+        <a href="https://katsujapones.github.io/hiragana/Katakana.html">Katakana</a>
+        <script src="./Hiragana.js"></script>
+    </div>
+</body>
+
+</html>
