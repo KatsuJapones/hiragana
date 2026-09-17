@@ -5,14 +5,17 @@
     <title>Practica Hiragana</title>
     <script src="https://kit.fontawesome.com/73cdc631b4.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./Hiragana.css">
+    <link rel="stylesheet" href="./Kana.css">
 </head>
 
 <body>
     <div id="window">
         <header>
             <img class="gato" src="gato.png" />
-            <h1>Hiragana</h1>
+            <div>
+                <h1>Aprende Japonés</h1>
+                <h2>Hiragana / Katakana</h2>
+            </div>
         </header>
         <div id="racha">
             <div id="streak">
@@ -31,6 +34,7 @@
             </div>
         </div>
         <div id="question-window">
+            <p id="mode-display">ひらがな</p>
             <p id="question">あ</p>
             <p id="veces"></p>
 
@@ -39,15 +43,31 @@
 
             <button id="checkButton">Entrega</button>
             <div id="result-window">
-                <p id="result" class=""></p>
-                <p id="mistake-hiragana" class="incorrecto"></p>
-                <p id="tu-respuesta" class="incorrecto"></p>
-                <p id="respuesta-correcta" class="incorrecto"></p>
+                <div id="result-muybien">
+                    <i class="fa-solid fa-check fa-fw correcto"></i>
+                    <p id="result-correcto" class="correcto result"></p>
+                </div>
+                <div id="result-error">
+                    <i class="fa-solid fa-xmark fa-fw incorrecto"></i>
+                    <p id="result-incorrecto" class="incorrecto result"></p>
+                </div>
+                <p id="mistake-kana" class="incorrecto"></p>
+                <p id="tu-respuesta" class="incorrecto">Tu respuesta: <span id="yourAnswer" class="bold"></span></p>
+                <p id="respuesta-correcta" class="incorrecto">Respuesta correcta: <span id="correctAnswer"
+                        class="bold"></span></p>
             </div>
             <p id="equivocado"></p>
         </div>
-        <a href="https://katsujapones.github.io/hiragana/Katakana.html">Katakana</a>
-        <script src="./Hiragana.js"></script>
+        <div class="center">
+            <div id="switch-container">
+                <input type="radio" id="hiragana-switch" name="switch" checked onclick=kanaMode(0)>
+                <label for="hiragana-switch" class="switch-label left-radius">Hiragana</label>
+                <input type="radio" id="katakana-switch" name="switch" onclick=kanaMode(1)>
+                <label for="katakana-switch" class="switch-label right-radius">Katakana</label>
+                <div id="switch-glider"></div>
+            </div>
+        </div>
+        <script src="./Kana.js"></script>
     </div>
 </body>
 
