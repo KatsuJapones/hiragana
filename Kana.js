@@ -70,7 +70,6 @@ const kana = [
     { char: ["ぷ", "プ"], answers: ["pu"] },
     { char: ["ぺ", "ペ"], answers: ["pe"] },
     { char: ["ぽ", "ポ"], answers: ["po"] },
-
 ];
 
 // かなモード
@@ -88,7 +87,7 @@ let randomKana = kana[randomIndex].char[currentMode];
 let question = document.getElementById("question");
 question.textContent = randomKana;
 
-// かな変更スイッチ
+// かな変更スイッチを押したときに何をするのか
 function kanaMode(mode) {
     currentMode = mode;
     modeDisplay.textContent = modeCode[mode];
@@ -101,15 +100,80 @@ function kanaMode(mode) {
     respuestaCorrecta.style.display = "none";
     currentStreakDisplay.textContent = currentStreak[currentMode];
     maxStreakDisplay.textContent = maxStreak[currentMode];
+    equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
+    equivocadoListDisplay.innerHTML = "";
+    equivocadosList[currentMode].forEach(function (equivocado) {
+        let character = document.createElement("span");
+        character.className = "equivocado-character";
+        character.textContent = equivocado;
+        equivocadoListDisplay.appendChild(character);
+    });
+    // まだ間違えてない場合はしまう
+    if (equivocadosList[currentMode].length === 0) {
+        letterButtonContainer.style.transition = "none";
+        letterButtonContainer.style.maxHeight = "0px";
+        equivocadoArrow.style.transform = "rotate(0deg)";
+    }
+    // モードを変えたときに変えた先の高さに合わせる
+    if (equivocadoArrow.style.transform === "rotate(90deg)") {
+        letterButtonContainer.style.transition = "none";
+        letterButtonContainer.style.maxHeight = letterButtonContainer.scrollHeight + "px";
+    }
 }
 
 // もう出した問題の管理リスト
 let usedChars = [];
 usedChars.push(randomIndex);
 
-// 間違えた文字のリスト
-let equivocadosList = [];
+// 間違えた文字のリストとその辺の表示あれこれ
+let equivocadosList = JSON.parse(sessionStorage.getItem("equivocadosList")) || [[], []];
+let equivocadoButton = document.getElementById("equivocado-button");
 let equivocados = document.getElementById("equivocado");
+let equivocadoArrow = document.getElementById("equivocado-arrow");
+let equivocadoListDisplay = document.getElementById("equivocado-list");
+let letterButtonContainer = document.querySelector(".letter-button-container");
+
+// 変更スイッチの機能保全
+letterButtonContainer.style.maxHeight = "0px";
+
+equivocadoArrow.textContent = "▶";
+equivocadoListDisplay.innerHTML = "";
+
+equivocadosList[currentMode].forEach(function (equivocado) {
+    let character = document.createElement("span");
+    character.className = "equivocado-character";
+    character.textContent = equivocado;
+    equivocadoListDisplay.appendChild(character);
+});
+
+
+equivocadoButton.addEventListener("click", function () {
+
+    // 一つ以上間違えてるときは文字と復習ボタンを表示
+    if (equivocadosList[currentMode].length > 0) {
+        if (letterButtonContainer.style.maxHeight === "0px") {
+            letterButtonContainer.style.maxHeight = letterButtonContainer.scrollHeight + "px";
+            letterButtonContainer.style.transition = "max-height 0.2s ease";
+            equivocadoArrow.style.transform = "rotate(90deg)";
+        } else {
+            letterButtonContainer.style.maxHeight = "0px";
+            letterButtonContainer.style.transition = "max-height 0.2s ease";
+            equivocadoArrow.style.transform = "rotate(0deg)";
+        }
+    }
+
+    // そうじゃないときは何も表示しない（0の時に復習ボタンを表示させないため）
+    else {
+        if (equivocadoArrow.style.transform === "rotate(0deg)" || equivocadoArrow.style.transform === "") {
+            equivocadoArrow.style.transform = "rotate(90deg)";
+        } else {
+            equivocadoArrow.style.transform = "rotate(0deg)";
+        }
+    }
+
+});
+
+equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
 
 // 今のストリークの生成
 let currentStreakDisplay = document.getElementById("current-streak-js");
@@ -129,7 +193,6 @@ let veces = 0;
 
 // ボタンの挙動
 let checkButton = document.getElementById("checkButton");
-let result = document.getElementById("result");
 let resultCorrecto = document.getElementById("result-correcto");
 let resultIncorrecto = document.getElementById("result-incorrecto");
 let input = document.getElementById("answer");
@@ -145,10 +208,8 @@ checkButton.addEventListener("click", function () {
 
     // ここに「回答を押したときの処理」を書く
 
-    // 空欄の時は入力するように言う
+    // 空欄の時は送信しない
     if (input.value === "") {
-        result.textContent = "¡Escribe algo!";
-        result.className = "escribe";
         return;
     }
 
@@ -184,8 +245,20 @@ checkButton.addEventListener("click", function () {
         correctAnswer.textContent = kana[randomIndex].answers[0];
         currentStreak[currentMode] = 0;
         sessionStorage.setItem("currentStreak", JSON.stringify(currentStreak));
-        equivocadosList.push(randomKana);
-        equivocados.textContent = "Respuestas incorrectas: " + equivocadosList.join(", ");
+        equivocadosList[currentMode].push(randomKana);
+        sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+        equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
+        equivocadoListDisplay.innerHTML = "";
+        equivocadosList[currentMode].forEach(function (equivocado) {
+            let character = document.createElement("span");
+            character.className = "equivocado-character";
+            character.textContent = equivocado;
+            equivocadoListDisplay.appendChild(character);
+        });
+        if (equivocadoArrow.style.transform == "rotate(90deg)" && equivocadosList[currentMode].length === 1) {
+            letterButtonContainer.style.maxHeight = letterButtonContainer.scrollHeight + "px";
+            letterButtonContainer.style.transition = "max-height 0.2s ease";
+        }
     }
 
     // ストリークの表示
@@ -195,7 +268,8 @@ checkButton.addEventListener("click", function () {
     // 全部使ったらリセット
     if (usedChars.length === kana.length) {
         usedChars = [];
-        equivocadosList = [];
+        equivocadosList = [[], []];
+        sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
 
         // やった回数表示
         veces++;
@@ -230,4 +304,23 @@ input.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         checkButton.click();
     }
+});
+
+// 復習モーダルを開く
+let repasar = document.getElementById("repasar");
+let repasarModal = document.getElementById("repasar-modal")
+repasar.addEventListener("click", function () {
+    repasarModal.showModal();
+    setTimeout(function () {
+        repasarModal.classList.add("modal-open");
+    }, 10);
+});
+
+// 復習モーダルを閉じる
+let salirButton = document.getElementById("salir-modal");
+salirButton.addEventListener("click", function () {
+    repasarModal.classList.remove("modal-open");
+    setTimeout(function () {
+        repasarModal.close();
+    }, 100);
 });

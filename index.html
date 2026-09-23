@@ -2,14 +2,17 @@
 <html>
 
 <head>
-    <title>Practica Hiragana</title>
+    <title>Aprende Japonés</title>
     <script src="https://kit.fontawesome.com/73cdc631b4.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./Kana.css">
 </head>
 
 <body>
+    <!-- 全体のまとめ役 -->
     <div id="window">
+
+        <!-- ヘッダー -->
         <header>
             <img class="gato" src="gato.png" />
             <div>
@@ -17,7 +20,11 @@
                 <h2>Hiragana / Katakana</h2>
             </div>
         </header>
+
+        <!-- ストリーク -->
         <div id="racha">
+
+            <!-- 現在ストリーク -->
             <div id="streak">
                 <img class="fire" src="fire.png" />
                 <div class="make-it-column">
@@ -25,6 +32,8 @@
                     <p id="current-streak-js" class="streak-number">0</p>
                 </div>
             </div>
+
+            <!-- マックスストリーク -->
             <div id="streak">
                 <img class="clown" src="clown.png" />
                 <div class="make-it-column">
@@ -33,20 +42,28 @@
                 </div>
             </div>
         </div>
+
+        <!-- 問題と答えとミス表示とか -->
         <div id="question-window">
             <p id="mode-display">ひらがな</p>
             <p id="question">あ</p>
             <p id="veces"></p>
 
-
+            <!-- 入力欄 -->
             <input id="answer" type="text" placeholder="Escribe tu respuesta...">
 
-            <button id="checkButton">Entrega</button>
+            <button id="checkButton"></button>
+
+            <!-- 答えと正解 -->
             <div id="result-window">
+
+                <!-- 正解時 -->
                 <div id="result-muybien">
                     <i class="fa-solid fa-check fa-fw correcto"></i>
                     <p id="result-correcto" class="correcto result"></p>
                 </div>
+
+                <!-- 不正解時 -->
                 <div id="result-error">
                     <i class="fa-solid fa-xmark fa-fw incorrecto"></i>
                     <p id="result-incorrecto" class="incorrecto result"></p>
@@ -56,8 +73,24 @@
                 <p id="respuesta-correcta" class="incorrecto">Respuesta correcta: <span id="correctAnswer"
                         class="bold"></span></p>
             </div>
-            <p id="equivocado"></p>
+
+            <!-- 間違えた問題の表示 -->
+            <div class="center">
+                <div id="equivocado-container">
+                    <button id="equivocado-button">
+                        <span id="equivocado"></span><span id="equivocado-arrow"></span>
+                    </button>
+                    <div class="letter-button-container">
+                        <div id="equivocado-list"></div>
+                        <button id="repasar">
+                            <i class="fa-solid fa-rotate fa-fw rotate"></i>
+                            <span id="repasar-button">Repasar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+        <!-- モード変換スイッチ -->
         <div class="center">
             <div id="switch-container">
                 <input type="radio" id="hiragana-switch" name="switch" checked onclick=kanaMode(0)>
@@ -67,8 +100,49 @@
                 <div id="switch-glider"></div>
             </div>
         </div>
+
+        <!-- 復習モーダル -->
+        <dialog id="repasar-modal">
+            <div id="modal-header">
+                <h2>Repaso</h2>
+                <h3>Intenta de nuevo los que te equivocaste!</h3>
+            </div>
+            <!-- これはポジションで固定する（ばつ） -->
+            <button id="salir-modal"><i class="fa-solid fa-xmark fa-fw salir"></i></button>
+            <p id="repaso-counter"></p>
+
+            <!-- モーダルの質問ウィンドウ -->
+            <div id="modal-window">
+                <p id="mode-display">ひらがな</p>
+                <p id="question">あ</p>
+
+                <!-- 入力欄 -->
+                <input id="answer" type="text" placeholder="Escribe tu respuesta...">
+
+                <button id="checkButton"></button>
+
+                <!-- 答えと正解 -->
+                <div id="result-window">
+
+                    <!-- 正解時 -->
+                    <div id="result-muybien">
+                        <i class="fa-solid fa-check fa-fw correcto"></i>
+                        <p id="result-correcto" class="correcto result"></p>
+                    </div>
+
+                    <!-- 不正解時 -->
+                    <div id="result-error">
+                        <i class="fa-solid fa-xmark fa-fw incorrecto"></i>
+                        <p id="result-incorrecto" class="incorrecto result"></p>
+                    </div>
+                    <p id="mistake-kana" class="incorrecto"></p>
+                    <p id="tu-respuesta" class="incorrecto">Tu respuesta: <span id="yourAnswer" class="bold"></span></p>
+                    <p id="respuesta-correcta" class="incorrecto">Respuesta correcta: <span id="correctAnswer"
+                            class="bold"></span></p>
+                </div>
+            </div>
+        </dialog>
         <script src="./Kana.js"></script>
-    </div>
 </body>
 
 </html>
