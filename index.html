@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <title>Aprende Japonés</title>
@@ -9,12 +9,18 @@
 </head>
 
 <body>
+    <!-- 背景装飾 -->
+    <img id="background-gato" src="gato3.png">
+    <img id="gate" src="Temple gate.png">
+    <img id="fuji" src="Fuji.png">
+    <img id="Sakura" src="Sakura.png">
+
     <!-- 全体のまとめ役 -->
     <div id="window">
 
         <!-- ヘッダー -->
         <header>
-            <img class="gato" src="gato.png" />
+            <img class="gato" src="gato2.png" alt="gato" />
             <div>
                 <h1>Aprende Japonés</h1>
                 <h2>Hiragana / Katakana</h2>
@@ -25,8 +31,8 @@
         <div id="racha">
 
             <!-- 現在ストリーク -->
-            <div id="streak">
-                <img class="fire" src="fire.png" />
+            <div class="streak">
+                <img class="fire" src="fire.png" alt="fire" />
                 <div class="make-it-column">
                     <p class="streak-message">Racha Actual</p>
                     <p id="current-streak-js" class="streak-number">0</p>
@@ -34,8 +40,8 @@
             </div>
 
             <!-- マックスストリーク -->
-            <div id="streak">
-                <img class="clown" src="clown.png" />
+            <div class="streak">
+                <img class="clown" src="clown.png" alt="clown" />
                 <div class="make-it-column">
                     <p class="streak-message">Racha Maximo</p>
                     <p id="max-streak-js" class="streak-number">0</p>
@@ -109,36 +115,37 @@
             </div>
             <!-- これはポジションで固定する（ばつ） -->
             <button id="salir-modal"><i class="fa-solid fa-xmark fa-fw salir"></i></button>
-            <p id="repaso-counter"></p>
 
             <!-- モーダルの質問ウィンドウ -->
             <div id="modal-window">
-                <p id="mode-display">ひらがな</p>
-                <p id="question">あ</p>
+                <p id="repaso-counter"></p>
+                <p id="modal-mode-display">ひらがな</p>
+                <p id="modal-question">あ</p>
 
                 <!-- 入力欄 -->
-                <input id="answer" type="text" placeholder="Escribe tu respuesta...">
+                <input id="modal-answer" type="text" placeholder="Escribe tu respuesta...">
 
-                <button id="checkButton"></button>
+                <button id="modal-checkButton"></button>
 
                 <!-- 答えと正解 -->
-                <div id="result-window">
+                <div id="modal-result-window">
 
                     <!-- 正解時 -->
-                    <div id="result-muybien">
+                    <div id="modal-result-muybien">
                         <i class="fa-solid fa-check fa-fw correcto"></i>
-                        <p id="result-correcto" class="correcto result"></p>
+                        <p id="modal-result-correcto" class="correcto result"></p>
                     </div>
 
                     <!-- 不正解時 -->
-                    <div id="result-error">
+                    <div id="modal-result-error">
                         <i class="fa-solid fa-xmark fa-fw incorrecto"></i>
-                        <p id="result-incorrecto" class="incorrecto result"></p>
+                        <p id="modal-result-incorrecto" class="incorrecto result"></p>
                     </div>
-                    <p id="mistake-kana" class="incorrecto"></p>
-                    <p id="tu-respuesta" class="incorrecto">Tu respuesta: <span id="yourAnswer" class="bold"></span></p>
-                    <p id="respuesta-correcta" class="incorrecto">Respuesta correcta: <span id="correctAnswer"
+                    <p id="modal-mistake-kana" class="incorrecto"></p>
+                    <p id="modal-tu-respuesta" class="incorrecto">Tu respuesta: <span id="modal-yourAnswer"
                             class="bold"></span></p>
+                    <p id="modal-respuesta-correcta" class="incorrecto">Respuesta correcta: <span
+                            id="modal-correctAnswer" class="bold"></span></p>
                 </div>
             </div>
         </dialog>

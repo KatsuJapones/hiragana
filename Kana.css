@@ -76,9 +76,16 @@ h6 {
 }
 
 
-/* ================================ 自分のcss ================================ */
+/* ================================ 
+            核となる所 
+================================ */
+html,
+body {
+    overscroll-behavior: none;
+}
+
 :root {
-    --textColor: #00035e;
+    --textColor: #00036f;
     --textColorLight: #4575ff;
     --backgroundLight: #ecf4ff;
     --backgroundColor: #fafafa;
@@ -86,18 +93,64 @@ h6 {
 
 body {
     text-align: center;
-    background: #a0d8ef;
+    background: linear-gradient(to bottom,
+            #cdebf9,
+            #eaf9ff);
     overflow-y: scroll;
 }
 
+img {
+    user-select: none;
+    pointer-events: none;
+}
+
+/* ================================ 
+            　背景装飾 
+================================ */
+#background-gato {
+    width: 10%;
+    position: fixed;
+    right: 4%;
+    bottom: 5%;
+}
+
+#gate {
+    position: fixed;
+    left: 4%;
+    bottom: 6%;
+    width: 12%;
+}
+
+#fuji {
+    width: 20%;
+    position: fixed;
+    left: 0px;
+    bottom: 32%;
+    mask-image: linear-gradient(to bottom,
+            black 70%,
+            transparent 100%);
+}
+
+#Sakura {
+    width: 12%;
+    position: fixed;
+    left: 0px;
+    top: 5%;
+}
+
+/* ================================ 
+            真ん中の画面 
+================================ */
 #window {
     width: 60%;
-    min-height: 100vh;
+    min-height: 100dvh;
     margin: 0 auto;
     background: var(--backgroundColor);
 }
 
-/* ==== header ==== */
+/* ================================ 
+            　ヘッダー 
+================================ */
 header {
     display: flex;
     justify-content: center;
@@ -129,7 +182,9 @@ h2 {
     font-weight: 500;
 }
 
-/* ==== Streak処理 ==== */
+/* ================================ 
+            Streak処理 
+================================ */
 #racha {
     display: flex;
     justify-content: space-around;
@@ -146,7 +201,7 @@ h2 {
     color: var(--textColor);
 }
 
-#streak {
+.streak {
     display: flex;
     justify-content: center;
     background: var(--backgroundLight);
@@ -173,7 +228,9 @@ h2 {
     flex-direction: column;
 }
 
-/* ==== question-window ==== */
+/* ================================ 
+        question-window 
+================================ */
 #question-window {
     box-shadow: 0 0 7px 7px #e0effa;
     border-radius: 16px;
@@ -182,7 +239,8 @@ h2 {
     padding: 24px 0;
 }
 
-#mode-display {
+#mode-display,
+#modal-mode-display {
     font-weight: bold;
     color: var(--textColorLight);
     background: var(--backgroundLight);
@@ -192,18 +250,23 @@ h2 {
     margin: 0 auto;
 }
 
-#question {
+#question,
+#modal-question {
     font-size: 5em;
     color: var(--textColor);
     font-weight: bold;
 }
 
-#checkButton {
+#checkButton,
+#modal-checkButton {
     display: none;
 }
 
-/* ==== 回答欄 ==== */
-#answer {
+/* ================================ 
+            　回答欄 
+================================ */
+#answer,
+#modal-answer {
     border: 2px solid #b5e5ea;
     border-radius: 8px;
     padding: 8px 16px;
@@ -211,12 +274,14 @@ h2 {
     margin: 8px auto;
 }
 
-#answer:focus {
+#answer:focus,
+#modal-answer:focus {
     outline: none;
     border: 2px solid #a5d5da;
 }
 
-#answer:hover {
+#answer:hover,
+#modal-answer:hover {
     border: 2px solid #a5d5da;
 }
 
@@ -225,36 +290,39 @@ input::placeholder {
     color: #89b9de;
 }
 
-/* ==== result-window ==== */
-#result-muybien {
+/* ================================ 
+        　result-window 
+================================ */
+#result-muybien,
+#modal-result-muybien {
     display: none;
     justify-content: center;
     gap: 4px;
     align-items: center;
 }
 
-#result-error {
+#result-error,
+#modal-result-error {
     display: none;
     justify-content: center;
     gap: 4px;
     align-items: center;
-}
-
-#error {
-    display: none;
 }
 
 .result {
     font-weight: 500;
 }
 
-#mistake-kana {
+#mistake-kana,
+#modal-mistake-kana {
     font-weight: bold;
     font-size: 1.4rem;
 }
 
 #tu-respuesta,
-#respuesta-correcta {
+#respuesta-correcta,
+#modal-tu-respuesta,
+#modal-respuesta-correcta {
     display: none;
 }
 
@@ -270,7 +338,9 @@ input::placeholder {
     color: #FF5555;
 }
 
-/* ==== 復習モード用のあれこれ ==== */
+/* ================================ 
+    　　復習モード用のあれこれ 
+================================ */
 #equivocado-container {
     display: flex;
     flex-direction: column;
@@ -354,7 +424,9 @@ input::placeholder {
 }
 
 
-/* ==== ひらがなカタカナを変更するスイッチ ==== */
+/* ================================ 
+    ひらがなとカタカナ変更スイッチ 
+================================ */
 .center {
     display: flex;
     justify-content: center;
@@ -421,15 +493,18 @@ input::placeholder {
     transform: translateX(100%);
 }
 
-/* ==== 復習モーダル ==== */
+/* ================================ 
+            復習モーダル 
+================================ */
 #repasar-modal {
     width: 55%;
     min-height: 90vh;
     border: none;
-    position: relative;
+    position: fixed;
+    margin: auto;
     border-radius: 16px;
     box-shadow: 0 0 30px 7px #a0d8ef;
-    background: #faffff;
+    background: #f2f9ff;
     transform: scale(0.1);
     opacity: 0;
     transition: transform 0.35s ease, opacity 0.25s ease;
@@ -443,6 +518,10 @@ input::placeholder {
 
 #repasar-modal::backdrop {
     background: #0000000d;
+}
+
+#modal-header {
+    margin-top: 8px;
 }
 
 #modal-header h2 {
@@ -488,10 +567,24 @@ input::placeholder {
     border-radius: 16px;
     margin: 24px auto;
     padding: 24px 0;
+    background: var(--backgroundColor);
 }
 
-/* ==== メディアクエリ ==== */
+#repaso-counter {
+    display: inline-block;
+    position: absolute;
+    top: 24px;
+    right: 100px;
+    color: var(--textColorLight);
+    font-weight: bold;
+    padding: 4px 24px;
+    border-radius: 16px;
+    background: var(--backgroundLight);
+}
 
+/* ================================ 
+        　　メディアクエリ 
+================================ */
 @media (max-width: 600px) {
     #window {
         width: 100%;

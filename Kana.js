@@ -1,4 +1,3 @@
-
 // かなのデータ表
 const kana = [
     { char: ["あ", "ア"], answers: ["a"] },
@@ -69,7 +68,7 @@ const kana = [
     { char: ["ぴ", "ピ"], answers: ["pi"] },
     { char: ["ぷ", "プ"], answers: ["pu"] },
     { char: ["ぺ", "ペ"], answers: ["pe"] },
-    { char: ["ぽ", "ポ"], answers: ["po"] },
+    { char: ["ぽ", "ポ"], answers: ["po"] }
 ];
 
 // かなモード
@@ -119,6 +118,16 @@ function kanaMode(mode) {
         letterButtonContainer.style.transition = "none";
         letterButtonContainer.style.maxHeight = letterButtonContainer.scrollHeight + "px";
     }
+
+    // モーダル用
+    modalEquivocado = equivocadosList[currentMode][0];
+    modalQuestion.textContent = modalEquivocado;
+    modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
+    modalResultMuyBien.style.display = "none";
+    modalResultError.style.display = "none";
+    modalMistake.textContent = "";
+    modalTuRespuesta.style.display = "none";
+    modalRespuestaCorrecta.style.display = "none";
 }
 
 // もう出した問題の管理リスト
@@ -197,6 +206,9 @@ let resultCorrecto = document.getElementById("result-correcto");
 let resultIncorrecto = document.getElementById("result-incorrecto");
 let input = document.getElementById("answer");
 let resultMuyBien = document.getElementById("result-muybien");
+const muybienMensaje = ["¡Muy bien!", "¡Excelente!", "¡Perfecto!", "¡Genial!", "¡Buen trabajo!", "¡Correcto!"];
+let mensaje;
+let mensajeUsado = [];
 let resultError = document.getElementById("result-error");
 let mistake = document.getElementById("mistake-kana");
 let respuestaCorrecta = document.getElementById("respuesta-correcta");
@@ -215,17 +227,13 @@ checkButton.addEventListener("click", function () {
 
     // 回答が正解と一緒だった場合
     if (kana[randomIndex].answers.includes(input.value.trim().toLowerCase())) {
+        clearResult();
         resultMuyBien.style.display = "flex";
-        resultError.style.display = "none";
-        resultCorrecto.textContent = "¡Correcto!";
-        resultIncorrecto.textContent = "";
+        do { mensaje = muybienMensaje[Math.floor(Math.random() * muybienMensaje.length)]; } while (mensajeUsado.includes(mensaje));
+        resultCorrecto.textContent = mensaje;
+        mensajeUsado.push(mensaje);
         currentStreak[currentMode]++;
         sessionStorage.setItem("currentStreak", JSON.stringify(currentStreak));
-        mistake.textContent = "";
-        tuRespuesta.style.display = "none";
-        yourAnswer.textContent = "";
-        respuestaCorrecta.style.display = "none";
-        correctAnswer.textContent = "";
         if (currentStreak[currentMode] > maxStreak[currentMode]) {
             maxStreak[currentMode] = currentStreak[currentMode];
             localStorage.setItem("maxStreak", JSON.stringify(maxStreak));
@@ -268,7 +276,7 @@ checkButton.addEventListener("click", function () {
     // 全部使ったらリセット
     if (usedChars.length === kana.length) {
         usedChars = [];
-        equivocadosList = [[], []];
+        equivocadosList[currentMode] = [];
         sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
 
         // やった回数表示
@@ -279,6 +287,11 @@ checkButton.addEventListener("click", function () {
         if (veces >= 2) {
             vecesDisplay.textContent = "Hiciste  " + veces + "  veces";
         }
+    }
+
+    // メッセージの管理
+    if (mensajeUsado.length === muybienMensaje.length) {
+        mensajeUsado = [];
     }
 
     // ランダムなかなを生成
@@ -314,6 +327,18 @@ repasar.addEventListener("click", function () {
     setTimeout(function () {
         repasarModal.classList.add("modal-open");
     }, 10);
+    // 間違えたかなを取得
+    modalEquivocado = equivocadosList[currentMode][0];
+    modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
+
+    // 間違えたかなを表示
+    let modalQuestion = document.getElementById("modal-question");
+    modalQuestion.textContent = modalEquivocado;
+
+    // カウンターを取得し設定
+    let repasoCounter = document.getElementById("repaso-counter");
+    let count = 1;
+    repasoCounter.textContent = count + "/" + equivocadosList[currentMode].length;
 });
 
 // 復習モーダルを閉じる
@@ -323,4 +348,160 @@ salirButton.addEventListener("click", function () {
     setTimeout(function () {
         repasarModal.close();
     }, 100);
+
+    clearResult();
+    clearModalResult();
+    count = 1;
+    equivocadosList = JSON.parse(sessionStorage.getItem("equivocadosList"));
 });
+
+// かなモード表示
+let modalModeDisplay = document.getElementById("modal-mode-display");
+modalModeDisplay.textContent = modeCode[currentMode];
+
+// 間違えたかなを取得
+let modalEquivocado = equivocadosList[currentMode][0];
+let modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
+
+// 間違えたかなを表示
+let modalQuestion = document.getElementById("modal-question");
+modalQuestion.textContent = modalEquivocado;
+
+// カウンターを取得し設定
+let repasoCounter = document.getElementById("repaso-counter");
+let count = 1;
+let cantidad = equivocadosList[currentMode].length;
+
+// ボタンの挙動
+let modalCheckButton = document.getElementById("modal-checkButton");
+let modalResultCorrecto = document.getElementById("modal-result-correcto");
+let modalResultIncorrecto = document.getElementById("modal-result-incorrecto");
+let modalInput = document.getElementById("modal-answer");
+let modalResultMuyBien = document.getElementById("modal-result-muybien");
+let modalResultError = document.getElementById("modal-result-error");
+let modalMistake = document.getElementById("modal-mistake-kana");
+let modalRespuestaCorrecta = document.getElementById("modal-respuesta-correcta");
+let modalTuRespuesta = document.getElementById("modal-tu-respuesta");
+let modalYourAnswer = document.getElementById("modal-yourAnswer");
+let modalCorrectAnswer = document.getElementById("modal-correctAnswer");
+let modalEquivocadosList = [];
+
+modalCheckButton.addEventListener("click", function () {
+
+    // ここに「回答を押したときの処理」を書く
+
+    // 空欄の時は送信しない
+    if (modalInput.value === "") {
+        return;
+    }
+
+    // 回答が正解と一緒だった場合
+    if (modalRespuesta.answers.includes(modalInput.value.trim().toLowerCase())) {
+        clearModalResult();
+        modalResultMuyBien.style.display = "flex";
+        do { mensaje = muybienMensaje[Math.floor(Math.random() * muybienMensaje.length)]; } while (mensajeUsado.includes(mensaje));
+        modalResultCorrecto.textContent = mensaje;
+        mensajeUsado.push(mensaje);
+        equivocadosList[currentMode].shift();
+    }
+
+    // 回答が間違っていた場合
+    else {
+        modalResultMuyBien.style.display = "none";
+        modalResultError.style.display = "flex";
+        modalResultIncorrecto.textContent = "Incorrecto...";
+        modalResultCorrecto.textContent = "";
+        modalMistake.textContent = modalEquivocado;
+        modalTuRespuesta.style.display = "block";
+        modalYourAnswer.textContent = modalInput.value;
+        modalRespuestaCorrecta.style.display = "block";
+        modalCorrectAnswer.textContent = modalRespuesta.answers[0];
+        equivocadosList[currentMode].shift();
+        modalEquivocadosList.push(modalEquivocado);
+    }
+
+    // メッセージの管理
+    if (mensajeUsado.length === muybienMensaje.length) {
+        mensajeUsado = [];
+    }
+
+    // 入力欄をリセットする
+    modalInput.value = "";
+
+    if (equivocadosList[currentMode].length > 0) {
+        // 次の問題の文字と答えをセットし直す
+        modalEquivocado = equivocadosList[currentMode][0];
+        modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
+
+        // 画面の表示を更新
+        modalQuestion.textContent = modalEquivocado;
+        count++;
+        repasoCounter.textContent = count + "/" + cantidad;
+    }
+
+    // 不正解をequivocadosListにコピー
+    else if (equivocadosList[currentMode].length === 0 && modalEquivocadosList.length > 0) {
+        equivocadosList[currentMode] = modalEquivocadosList;
+        modalEquivocadosList = [];
+        modalEquivocado = equivocadosList[currentMode][0];
+        modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
+        modalQuestion.textContent = modalEquivocado;
+        count = 1;
+        cantidad = equivocadosList[currentMode].length;
+        repasoCounter.textContent = count + "/" + cantidad;
+    }
+
+    // 復習が終了したら
+    else {
+        repasarModal.classList.remove("modal-open");
+        setTimeout(function () {
+            repasarModal.close();
+        }, 100);
+
+        // リストをクリアして、間違えた問題欄を閉じる
+        equivocadosList[currentMode] = [];
+        sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+        equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
+        letterButtonContainer.style.maxHeight = "0px";
+        letterButtonContainer.style.transition = "max-height 0.2s ease";
+        equivocadoArrow.style.transform = "rotate(0deg)";
+
+        // いろいろなもののクリア
+        clearResult();
+        clearModalResult();
+        count = 1;
+    }
+});
+
+// エンターで入力される仕組み
+modalInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        modalCheckButton.click();
+    }
+});
+
+// 結果をクリアする
+function clearResult() {
+    resultMuyBien.style.display = "none";
+    resultError.style.display = "none";
+    resultCorrecto.textContent = "";
+    resultIncorrecto.textContent = "";
+    mistake.textContent = "";
+    tuRespuesta.style.display = "none";
+    yourAnswer.textContent = "";
+    respuestaCorrecta.style.display = "none";
+    correctAnswer.textContent = "";
+}
+
+// モーダルの結果をクリアする
+function clearModalResult() {
+    modalResultMuyBien.style.display = "none";
+    modalResultError.style.display = "none";
+    modalResultCorrecto.textContent = "";
+    modalResultIncorrecto.textContent = "";
+    modalMistake.textContent = "";
+    modalTuRespuesta.style.display = "none";
+    modalYourAnswer.textContent = "";
+    modalRespuestaCorrecta.style.display = "none";
+    modalCorrectAnswer.textContent = "";
+}
