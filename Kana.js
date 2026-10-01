@@ -145,7 +145,6 @@ let letterButtonContainer = document.querySelector(".letter-button-container");
 // 変更スイッチの機能保全
 letterButtonContainer.style.maxHeight = "0px";
 
-equivocadoArrow.textContent = "▶";
 setEquivocadosList();
 
 // equivocadosListを開くためのボタン
