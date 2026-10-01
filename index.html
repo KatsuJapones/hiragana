@@ -10,17 +10,19 @@
 
 <body>
     <!-- 背景装飾 -->
-    <img id="background-gato" src="gato3.png">
-    <img id="gate" src="Temple gate.png">
-    <img id="fuji" src="Fuji.png">
-    <img id="Sakura" src="Sakura.png">
+    <div id="background">
+        <img id="background-gato" src="gato3.png">
+        <img id="gate" src="Temple gate.png">
+        <img id="fuji" src="Fuji.png">
+        <img id="Sakura" src="Sakura.png">
+    </div>
 
     <!-- 全体のまとめ役 -->
     <div id="window">
 
         <!-- ヘッダー -->
         <header>
-            <img class="gato" src="gato2.png" alt="gato" />
+            <img class="gato" src="gato2.png">
             <div>
                 <h1>Aprende Japonés</h1>
                 <h2>Hiragana / Katakana</h2>
@@ -32,7 +34,7 @@
 
             <!-- 現在ストリーク -->
             <div class="streak">
-                <img class="fire" src="fire.png" alt="fire" />
+                <img class="fire" src="fire.png">
                 <div class="make-it-column">
                     <p class="streak-message">Racha Actual</p>
                     <p id="current-streak-js" class="streak-number">0</p>
@@ -41,7 +43,7 @@
 
             <!-- マックスストリーク -->
             <div class="streak">
-                <img class="clown" src="clown.png" alt="clown" />
+                <img class="clown" src="clown.png">
                 <div class="make-it-column">
                     <p class="streak-message">Racha Maximo</p>
                     <p id="max-streak-js" class="streak-number">0</p>
@@ -95,6 +97,21 @@
                     </div>
                 </div>
             </div>
+            <dialog id="result-modal">
+                <div id="result-header">
+                    <h2>Resultado</h2>
+                    <p>Terminaste todas las letras!</p>
+                </div>
+                <div id="estatistica">
+                    <div id="correctos-incorrectos">
+                        <p id="los-correctos"></p>
+                        <p id="los-incorrectos"></p>
+                    </div>
+                    <p id="porcentaje"></p>
+                    <p id="los-equivocados"></p>
+                    <button id="result-salir">Salir</button>
+                </div>
+            </dialog>
         </div>
         <!-- モード変換スイッチ -->
         <div class="center">
@@ -111,10 +128,24 @@
         <dialog id="repasar-modal">
             <div id="modal-header">
                 <h2>Repaso</h2>
-                <h3>Intenta de nuevo los que te equivocaste!</h3>
+                <h3>Intenta de nuevo las que te equivocaste!</h3>
             </div>
             <!-- これはポジションで固定する（ばつ） -->
             <button id="salir-modal"><i class="fa-solid fa-xmark fa-fw salir"></i></button>
+
+            <!-- Confirm Modal -->
+            <dialog id="enserio-sales">
+                <div id="dialog-container">
+                    <div id="seguro-cuestion">
+                        <i class="fa-solid fa-triangle-exclamation fa-fw warning"></i>
+                        <h4>¿Seguro que quieres salir?</h4>
+                    </div>
+                    <p>Si abandonas ahora, las preguntas que ya respondiste bien seguirán en la lista de incorrectas.
+                    </p>
+                    <button id="confirm-no">Continuar</button>
+                    <button id="confirm-yes">Sí, salir</button>
+                </div>
+            </dialog>
 
             <!-- モーダルの質問ウィンドウ -->
             <div id="modal-window">
@@ -148,6 +179,17 @@
                             id="modal-correctAnswer" class="bold"></span></p>
                 </div>
             </div>
+
+            <!-- 続ける？モーダル -->
+            <dialog id="continuas">
+                <div id="buen-trabajo">
+                    <i class="fa-solid fa-check fa-fw"></i>
+                    <h4>¡Buen trabajo!</h4>
+                </div>
+                <p>¿Quieres repasar las que te equivocaste ahora?</p>
+                <button id="continuas-confirm-yes">Sí, repasar</button>
+                <button id="continuas-confirm-no">No, ir al inicio</button>
+            </dialog>
         </dialog>
         <script src="./Kana.js"></script>
 </body>

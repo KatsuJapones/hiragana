@@ -104,6 +104,10 @@ img {
     pointer-events: none;
 }
 
+button:focus {
+    outline: none;
+}
+
 /* ================================ 
             　背景装飾 
 ================================ */
@@ -228,6 +232,54 @@ h2 {
     flex-direction: column;
 }
 
+@keyframes correcto {
+    0% {
+        transform: scale(1.1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.es-correcto {
+    display: inline-block;
+    animation: correcto 0.2s ease-out both;
+}
+
+@keyframes incorrecto {
+
+    0%,
+    100% {
+        transform: translate(0px, 0px);
+    }
+
+    20% {
+        transform: translate(-1.5%, 1.5%);
+    }
+
+    40% {
+        transform: translate(1.5%, -1.5%);
+    }
+
+    60% {
+        transform: translate(-1.5%, -1.5%);
+    }
+
+    80% {
+        transform: translate(1.5%, 1.5%);
+    }
+}
+
+.es-incorrecto {
+    display: inline-block;
+    animation: incorrecto 0.25s ease-out both;
+}
+
 /* ================================ 
         question-window 
 ================================ */
@@ -245,8 +297,8 @@ h2 {
     color: var(--textColorLight);
     background: var(--backgroundLight);
     border-radius: 32px;
-    width: 16%;
-    padding: 4px 0;
+    width: max-content;
+    padding: 4px 4%;
     margin: 0 auto;
 }
 
@@ -331,11 +383,60 @@ input::placeholder {
 }
 
 .correcto {
-    color: #55FF55;
+    color: #47f447;
+    font-size: 1.08rem;
+}
+
+@keyframes correcto-mensaje {
+    0% {
+        transform: scale(1.025);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.correcto-mensaje {
+    display: inline-block;
+    animation: correcto-mensaje 0.2s ease-out both;
 }
 
 .incorrecto {
-    color: #FF5555;
+    color: #ff5555;
+}
+
+@keyframes incorrecto-mensaje {
+
+    0%,
+    100% {
+        transform: translate(0px, 0px);
+    }
+
+    20% {
+        transform: translate(-0.7px, 0.7px);
+    }
+
+    40% {
+        transform: translate(0.7px, -0.7px);
+    }
+
+    60% {
+        transform: translate(-0.7px, -0.7px);
+    }
+
+    80% {
+        transform: translate(0.7px, 0.7px);
+    }
+}
+
+.incorrecto-mensaje {
+    display: inline-block;
+    animation: incorrecto-mensaje 0.2s ease-out both;
 }
 
 /* ================================ 
@@ -395,8 +496,8 @@ input::placeholder {
     gap: 0.5rem;
     background: #5585ff;
     border-radius: 32px;
-    padding: 8px 0px;
-    width: 170px;
+    padding: 8px 24px;
+    width: max-content;
     margin: 8px auto;
     border: none;
 }
@@ -423,6 +524,19 @@ input::placeholder {
     transition: max-height 0.2s ease;
 }
 
+/* ================================ 
+        　 リザルトモーダル 
+================================ */
+#result-modal {
+    transform: scale(0.1);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.25s ease;
+}
+
+#result-modal.modal-open {
+    transform: scale(1);
+    opacity: 1;
+}
 
 /* ================================ 
     ひらがなとカタカナ変更スイッチ 
@@ -433,7 +547,7 @@ input::placeholder {
 }
 
 #switch-container {
-    margin: 8px auto;
+    margin: 24px auto;
     position: relative;
     width: 30%;
     display: flex;
@@ -498,7 +612,7 @@ input::placeholder {
 ================================ */
 #repasar-modal {
     width: 55%;
-    min-height: 90vh;
+    min-height: 90dvh;
     border: none;
     position: fixed;
     margin: auto;
@@ -583,21 +697,185 @@ input::placeholder {
 }
 
 /* ================================ 
+        　Confirm Modal 
+================================ */
+#enserio-sales {
+    width: 45%;
+    height: 24dvh;
+    border: none;
+    padding: 0;
+    position: fixed;
+    margin: auto;
+    border-radius: 16px;
+    box-shadow: 0 0 30px 7px #ffb3b3;
+    background: var(--backgroundColor);
+}
+
+#dialog-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+#seguro-cuestion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.warning {
+    color: #e67e22;
+}
+
+#seguro-cuestion h4 {
+    color: #ff5555;
+}
+
+#dialog-container p {
+    color: #a1b2c3;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+#dialog-container button {
+    display: inline-block;
+    position: absolute;
+    bottom: 16px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 32px;
+    padding: 8px 0px;
+    width: 20%;
+    margin: 8px 16px;
+    border: none;
+    color: var(--backgroundColor);
+    font-weight: bold;
+}
+
+#confirm-no {
+    background: #a0d8ef;
+    left: 25%;
+}
+
+#confirm-yes {
+    background: #ffb3b3;
+    right: 25%;
+}
+
+#confirm-no:hover {
+    background: #a8e1f7;
+}
+
+#confirm-yes:hover {
+    background: #ffc5c5;
+}
+
+/* ================================ 
+        　 続ける？モーダル 
+================================ */
+#continuas {
+    width: 45%;
+    height: 22dvh;
+    border: none;
+    padding: 0;
+    position: fixed;
+    margin: auto;
+    border-radius: 16px;
+    box-shadow: 0 0 30px 7px #a0d8ef;
+    background: var(--backgroundColor);
+    transform: scale(0.1);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.25s ease;
+}
+
+#continuas.modal-open {
+    transform: scale(1);
+    opacity: 1;
+}
+
+#buen-trabajo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #47f447;
+    font-size: 1.2rem;
+    font-weight: bold;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+#continuas p {
+    color: #a1b2c3;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+#continuas button {
+    display: inline-block;
+    position: absolute;
+    bottom: 16px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 32px;
+    padding: 8px 0px;
+    width: 22%;
+    margin: 8px 16px;
+    border: none;
+    color: var(--backgroundColor);
+    font-weight: bold;
+}
+
+#continuas-confirm-yes {
+    background: #a0d8ef;
+    left: 24%;
+}
+
+#continuas-confirm-yes:hover {
+    background: #a8e1f7;
+}
+
+#continuas-confirm-no {
+    background: #ffb3b3;
+    right: 24%;
+}
+
+#continuas-confirm-no:hover {
+    background: #ffc5c5;
+}
+
+/* ================================ 
         　　メディアクエリ 
 ================================ */
 @media (max-width: 600px) {
+
+    /* ======== 核となる所 ======== */
+    html {
+        font-size: 87.5%;
+    }
+
+    body {
+        background: var(--backgroundColor);
+    }
+
+    #background {
+        display: none;
+    }
+
     #window {
         width: 100%;
+        min-height: auto;
     }
 
-    #question {
-        font-size: 8em;
+    /* ======== ヘッダー ======== */
+    header {
+        display: none;
     }
 
-    #answer {
-        font-size: 16px;
-    }
-
+    /* ======== Streak処理 ======== */
     .fire {
         width: 14.5px;
         height: 18px;
@@ -608,15 +886,86 @@ input::placeholder {
         height: 18px;
     }
 
-    #streak {
-        width: 40%;
+    .streak {
+        margin-top: 16px;
+        width: 42%;
+        padding: 8px 12px;
     }
 
-    .streak-message {
-        font-size: 0.6rem;
+    /* ======== Question Window ======== */
+    #question-window {
+        width: 85%;
     }
 
-    .streak-number {
-        font-size: 1.0rem;
+    #answer {
+        width: 85%;
+        font-size: 16px;
+    }
+
+    #equivocado-container {
+        max-width: 90%;
+    }
+
+    /* ======== ひらがなとカタカナ変更スイッチ ======== */
+    #switch-container {
+        width: 60%;
+    }
+
+    /* ======== 復習モーダル ======== */
+    #repasar-modal {
+        width: 90%;
+        min-height: 55dvh;
+    }
+
+    #modal-mode-display {
+        display: none;
+    }
+
+    #repaso-counter {
+        position: static;
+        margin: 0 auto;
+    }
+
+    /* ======== Confirm Modal ======== */
+    #enserio-sales {
+        width: 80%;
+        height: 20dvh;
+    }
+
+    #dialog-container button {
+        width: 30%;
+        bottom: 8px;
+    }
+
+    #confirm-no {
+        left: 10%;
+    }
+
+    #confirm-yes {
+        right: 10%;
+    }
+
+    /* ======== 続ける？モーダル ======== */
+    #continuas {
+        width: 80%;
+        height: 18dvh;
+    }
+
+    #continuas p {
+        width: 70%;
+        margin: 0 auto;
+    }
+
+    #continuas button {
+        width: 36%;
+        bottom: 8px;
+    }
+
+    #continuas-confirm-yes {
+        left: 5%;
+    }
+
+    #continuas-confirm-no {
+        right: 5%;
     }
 }

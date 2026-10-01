@@ -1,3 +1,6 @@
+// このサイト自体でお金は稼げないかもしれないが日本語を学ぶコミュニティを作って
+// そこで何か広告をしたりビジネスにつなげるチャンスがあるかもしれない！
+
 // かなのデータ表
 const kana = [
     { char: ["あ", "ア"], answers: ["a"] },
@@ -76,22 +79,20 @@ let currentMode = 0;
 
 // かなモード表示
 let modeCode = ["ひらがな", "カタカナ"];
-let modeDisplay = document.getElementById("mode-display");
+const modeDisplay = document.getElementById("mode-display");
 
 // ランダムなかなを生成
 let randomIndex = Math.floor(Math.random() * kana.length);
 let randomKana = kana[randomIndex].char[currentMode];
 
 // ランダムなかなを表示
-let question = document.getElementById("question");
+const question = document.getElementById("question");
 question.textContent = randomKana;
 
 // かな変更スイッチを押したときに何をするのか
 function kanaMode(mode) {
     currentMode = mode;
     modeDisplay.textContent = modeCode[mode];
-    randomKana = kana[randomIndex].char[currentMode];
-    question.textContent = randomKana;
     resultMuyBien.style.display = "none";
     resultError.style.display = "none";
     mistake.textContent = "";
@@ -100,13 +101,7 @@ function kanaMode(mode) {
     currentStreakDisplay.textContent = currentStreak[currentMode];
     maxStreakDisplay.textContent = maxStreak[currentMode];
     equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
-    equivocadoListDisplay.innerHTML = "";
-    equivocadosList[currentMode].forEach(function (equivocado) {
-        let character = document.createElement("span");
-        character.className = "equivocado-character";
-        character.textContent = equivocado;
-        equivocadoListDisplay.appendChild(character);
-    });
+    setEquivocadosList();
     // まだ間違えてない場合はしまう
     if (equivocadosList[currentMode].length === 0) {
         letterButtonContainer.style.transition = "none";
@@ -118,6 +113,12 @@ function kanaMode(mode) {
         letterButtonContainer.style.transition = "none";
         letterButtonContainer.style.maxHeight = letterButtonContainer.scrollHeight + "px";
     }
+    // usedCharsに基づいて出してないやつを表示する
+    do {
+        randomIndex = Math.floor(Math.random() * kana.length);
+    } while (usedChars[mode].includes(randomIndex))
+    randomKana = kana[randomIndex].char[currentMode];
+    question.textContent = randomKana;
 
     // モーダル用
     modalEquivocado = equivocadosList[currentMode][0];
@@ -131,31 +132,23 @@ function kanaMode(mode) {
 }
 
 // もう出した問題の管理リスト
-let usedChars = [];
-usedChars.push(randomIndex);
+let usedChars = JSON.parse(sessionStorage.getItem("usedChars")) || [[], []];
 
 // 間違えた文字のリストとその辺の表示あれこれ
 let equivocadosList = JSON.parse(sessionStorage.getItem("equivocadosList")) || [[], []];
-let equivocadoButton = document.getElementById("equivocado-button");
-let equivocados = document.getElementById("equivocado");
-let equivocadoArrow = document.getElementById("equivocado-arrow");
-let equivocadoListDisplay = document.getElementById("equivocado-list");
+const equivocadoButton = document.getElementById("equivocado-button");
+const equivocados = document.getElementById("equivocado");
+const equivocadoArrow = document.getElementById("equivocado-arrow");
+const equivocadoListDisplay = document.getElementById("equivocado-list");
 let letterButtonContainer = document.querySelector(".letter-button-container");
 
 // 変更スイッチの機能保全
 letterButtonContainer.style.maxHeight = "0px";
 
 equivocadoArrow.textContent = "▶";
-equivocadoListDisplay.innerHTML = "";
+setEquivocadosList();
 
-equivocadosList[currentMode].forEach(function (equivocado) {
-    let character = document.createElement("span");
-    character.className = "equivocado-character";
-    character.textContent = equivocado;
-    equivocadoListDisplay.appendChild(character);
-});
-
-
+// equivocadosListを開くためのボタン
 equivocadoButton.addEventListener("click", function () {
 
     // 一つ以上間違えてるときは文字と復習ボタンを表示
@@ -185,40 +178,35 @@ equivocadoButton.addEventListener("click", function () {
 equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
 
 // 今のストリークの生成
-let currentStreakDisplay = document.getElementById("current-streak-js");
+const currentStreakDisplay = document.getElementById("current-streak-js");
 let currentStreak = JSON.parse(sessionStorage.getItem("currentStreak")) || [0, 0];
 
 currentStreakDisplay.textContent = currentStreak[currentMode];
 
 // 最高ストリークの生成
-let maxStreakDisplay = document.getElementById("max-streak-js");
+const maxStreakDisplay = document.getElementById("max-streak-js");
 let maxStreak = JSON.parse(localStorage.getItem("maxStreak")) || [0, 0];
 
 maxStreakDisplay.textContent = maxStreak[currentMode];
 
-// やった数
-let vecesDisplay = document.getElementById("veces");
-let veces = 0;
-
 // ボタンの挙動
-let checkButton = document.getElementById("checkButton");
-let resultCorrecto = document.getElementById("result-correcto");
-let resultIncorrecto = document.getElementById("result-incorrecto");
-let input = document.getElementById("answer");
-let resultMuyBien = document.getElementById("result-muybien");
+const checkButton = document.getElementById("checkButton");
+const resultCorrecto = document.getElementById("result-correcto");
+const resultIncorrecto = document.getElementById("result-incorrecto");
+const input = document.getElementById("answer");
+const resultMuyBien = document.getElementById("result-muybien");
 const muybienMensaje = ["¡Muy bien!", "¡Excelente!", "¡Perfecto!", "¡Genial!", "¡Buen trabajo!", "¡Correcto!"];
 let mensaje;
 let mensajeUsado = [];
-let resultError = document.getElementById("result-error");
-let mistake = document.getElementById("mistake-kana");
-let respuestaCorrecta = document.getElementById("respuesta-correcta");
-let tuRespuesta = document.getElementById("tu-respuesta");
-let yourAnswer = document.getElementById("yourAnswer");
-let correctAnswer = document.getElementById("correctAnswer");
+const resultError = document.getElementById("result-error");
+const mistake = document.getElementById("mistake-kana");
+const respuestaCorrecta = document.getElementById("respuesta-correcta");
+const tuRespuesta = document.getElementById("tu-respuesta");
+const yourAnswer = document.getElementById("yourAnswer");
+const correctAnswer = document.getElementById("correctAnswer");
 
+// 回答を送信した時の処理
 checkButton.addEventListener("click", function () {
-
-    // ここに「回答を押したときの処理」を書く
 
     // 空欄の時は送信しない
     if (input.value === "") {
@@ -228,22 +216,50 @@ checkButton.addEventListener("click", function () {
     // 回答が正解と一緒だった場合
     if (kana[randomIndex].answers.includes(input.value.trim().toLowerCase())) {
         clearResult();
+        if (!usedChars[currentMode].includes(randomIndex)) {
+            usedChars[currentMode].push(randomIndex);
+            sessionStorage.setItem("usedChars", JSON.stringify(usedChars));
+        }
+
+        // 正解メッセージの表示（使った正解メッセージの管理も）とアニメーション
         resultMuyBien.style.display = "flex";
+        resultMuyBien.classList.remove("correcto-mensaje");
+        resultMuyBien.offsetWidth;
+        resultMuyBien.classList.add("correcto-mensaje");
         do { mensaje = muybienMensaje[Math.floor(Math.random() * muybienMensaje.length)]; } while (mensajeUsado.includes(mensaje));
         resultCorrecto.textContent = mensaje;
         mensajeUsado.push(mensaje);
+
+        // ストリーク関連の操作
         currentStreak[currentMode]++;
+        currentStreakDisplay.classList.remove("es-incorrecto");
+        maxStreakDisplay.classList.remove("es-incorrecto");
+        currentStreakDisplay.classList.remove("es-correcto");
+        currentStreakDisplay.offsetWidth;
+        currentStreakDisplay.classList.add("es-correcto");
         sessionStorage.setItem("currentStreak", JSON.stringify(currentStreak));
         if (currentStreak[currentMode] > maxStreak[currentMode]) {
             maxStreak[currentMode] = currentStreak[currentMode];
             localStorage.setItem("maxStreak", JSON.stringify(maxStreak));
+            maxStreakDisplay.classList.remove("es-correcto");
+            maxStreakDisplay.offsetWidth;
+            maxStreakDisplay.classList.add("es-correcto");
         }
     }
 
     // 回答が間違っていた場合
     else {
+        if (!usedChars[currentMode].includes(randomIndex)) {
+            usedChars[currentMode].push(randomIndex);
+            sessionStorage.setItem("usedChars", JSON.stringify(usedChars));
+        }
+
+        // メッセージの管理
         resultMuyBien.style.display = "none";
         resultError.style.display = "flex";
+        resultError.classList.remove("incorrecto-mensaje");
+        resultError.offsetWidth;
+        resultError.classList.add("incorrecto-mensaje");
         resultIncorrecto.textContent = "Incorrecto...";
         resultCorrecto.textContent = "";
         mistake.textContent = kana[randomIndex].char[currentMode];
@@ -251,21 +267,38 @@ checkButton.addEventListener("click", function () {
         yourAnswer.textContent = input.value;
         respuestaCorrecta.style.display = "block";
         correctAnswer.textContent = kana[randomIndex].answers[0];
+
+        // 更新していたストリークのアニメーション
+        currentStreakDisplay.classList.remove("es-correcto");
+        maxStreakDisplay.classList.remove("es-correcto");
+        if (currentStreak[currentMode] != 0) {
+            currentStreakDisplay.classList.remove("es-incorrecto");
+            currentStreakDisplay.offsetWidth;
+            currentStreakDisplay.classList.add("es-incorrecto");
+        }
+        if (currentStreak[currentMode] === maxStreak[currentMode]) {
+            maxStreakDisplay.classList.remove("es-incorrecto");
+            maxStreakDisplay.offsetWidth;
+            maxStreakDisplay.classList.add("es-incorrecto");
+        }
+
+        // ストリークをリセット
         currentStreak[currentMode] = 0;
         sessionStorage.setItem("currentStreak", JSON.stringify(currentStreak));
+
+        // 間違えた問題への追加
         equivocadosList[currentMode].push(randomKana);
         sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
         equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
-        equivocadoListDisplay.innerHTML = "";
-        equivocadosList[currentMode].forEach(function (equivocado) {
-            let character = document.createElement("span");
-            character.className = "equivocado-character";
-            character.textContent = equivocado;
-            equivocadoListDisplay.appendChild(character);
-        });
+        setEquivocadosList();
+
+        // equivocadosListの表示関連（リストの高さの調節）
         if (equivocadoArrow.style.transform == "rotate(90deg)" && equivocadosList[currentMode].length === 1) {
             letterButtonContainer.style.maxHeight = letterButtonContainer.scrollHeight + "px";
             letterButtonContainer.style.transition = "max-height 0.2s ease";
+        }
+        if (equivocadoArrow.style.transform == "rotate(90deg)") {
+            letterButtonContainer.style.maxHeight = letterButtonContainer.scrollHeight + "px";
         }
     }
 
@@ -273,20 +306,48 @@ checkButton.addEventListener("click", function () {
     currentStreakDisplay.textContent = currentStreak[currentMode];
     maxStreakDisplay.textContent = maxStreak[currentMode];
 
-    // 全部使ったらリセット
-    if (usedChars.length === kana.length) {
-        usedChars = [];
-        equivocadosList[currentMode] = [];
-        sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+    // リザルトモーダルの準備
+    const resultModal = document.getElementById("result-modal");
+    const losCorrectos = document.getElementById("los-correctos");
+    const losIncorrectos = document.getElementById("los-incorrectos");
+    const porcentaje = document.getElementById("porcentaje");
+    const losEquivocados = document.getElementById("los-equivocados");
+    const resultSalir = document.getElementById("result-salir");
 
-        // やった回数表示
-        veces++;
-        if (veces === 1) {
-            vecesDisplay.textContent = "Hiciste  " + veces + "  vez";
-        }
-        if (veces >= 2) {
-            vecesDisplay.textContent = "Hiciste  " + veces + "  veces";
-        }
+    // Result-salirボタンを押したときの挙動
+    resultSalir.addEventListener("click", function () {
+        resultModal.classList.remove("modal-open");
+        setTimeout(function () {
+            resultModal.close();
+            input.focus();
+        }, 100);
+    });
+
+    // 全部使ったらリセット
+    if (usedChars[currentMode].length === kana.length) {
+
+        // リザルトモーダルを開く
+        setTimeout(() => {
+            resultModal.showModal();
+            resultModal.classList.add("modal-open");
+        }, 10);
+
+        losCorrectos.textContent = "Correctos: " + (kana.length - equivocadosList[currentMode].length);
+        losIncorrectos.textContent = "Incorrectos: " + equivocadosList[currentMode].length;
+        porcentaje.textContent = "Precisión: " + ((kana.length - equivocadosList[currentMode].length) / kana.length * 100).toFixed(1) + "%";
+        losEquivocados.textContent = "Las que te equivocaste: " + equivocadosList[currentMode];
+
+        usedChars[currentMode] = [];
+        equivocadosList[currentMode] = [];
+        sessionStorage.setItem("usedChars", JSON.stringify(usedChars));
+        sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+        clearResult();
+        clearModalResult();
+        setEquivocadosList();
+        equivocados.textContent = "Respuestas incorrectas (" + cantidad + ")";
+        letterButtonContainer.style.maxHeight = "0px";
+        letterButtonContainer.style.transition = "max-height 0.2s ease";
+        equivocadoArrow.style.transform = "rotate(0deg)";
     }
 
     // メッセージの管理
@@ -298,10 +359,9 @@ checkButton.addEventListener("click", function () {
     randomIndex = Math.floor(Math.random() * kana.length);
 
     // 既に使われた奴なら引き直す
-    while (usedChars.includes(randomIndex)) {
+    while (usedChars[currentMode].includes(randomIndex)) {
         randomIndex = Math.floor(Math.random() * kana.length);
     }
-    usedChars.push(randomIndex);
 
     randomKana = kana[randomIndex].char[currentMode];
 
@@ -320,43 +380,99 @@ input.addEventListener("keydown", function (event) {
 });
 
 // 復習モーダルを開く
-let repasar = document.getElementById("repasar");
-let repasarModal = document.getElementById("repasar-modal")
+const repasar = document.getElementById("repasar");
+const repasarModal = document.getElementById("repasar-modal")
 repasar.addEventListener("click", function () {
     repasarModal.showModal();
     setTimeout(function () {
         repasarModal.classList.add("modal-open");
     }, 10);
+
+    modalInput.focus();
+
     // 間違えたかなを取得
     modalEquivocado = equivocadosList[currentMode][0];
     modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
 
     // 間違えたかなを表示
-    let modalQuestion = document.getElementById("modal-question");
+    const modalQuestion = document.getElementById("modal-question");
     modalQuestion.textContent = modalEquivocado;
 
     // カウンターを取得し設定
-    let repasoCounter = document.getElementById("repaso-counter");
+    const repasoCounter = document.getElementById("repaso-counter");
     let count = 1;
-    repasoCounter.textContent = count + "/" + equivocadosList[currentMode].length;
+    equivocadosList = JSON.parse(sessionStorage.getItem("equivocadosList"));
+    cantidad = equivocadosList[currentMode].length;
+    repasoCounter.textContent = count + "/" + cantidad;
 });
 
 // 復習モーダルを閉じる
-let salirButton = document.getElementById("salir-modal");
+const salirButton = document.getElementById("salir-modal");
+const enserioModal = document.getElementById("enserio-sales");
+const dialogContainer = document.getElementById("dialog-container");
 salirButton.addEventListener("click", function () {
-    repasarModal.classList.remove("modal-open");
-    setTimeout(function () {
-        repasarModal.close();
-    }, 100);
 
-    clearResult();
-    clearModalResult();
-    count = 1;
-    equivocadosList = JSON.parse(sessionStorage.getItem("equivocadosList"));
+    // まだ何も操作してなかったらそのまま閉じる
+    if (count === 1) {
+        repasarModal.classList.remove("modal-open");
+        setTimeout(function () {
+            repasarModal.close();
+            input.focus();
+        }, 100);
+        clearResult();
+        clearModalResult();
+        count = 1;
+        equivocadosList = JSON.parse(sessionStorage.getItem("equivocadosList"));
+        cantidad = equivocadosList[currentMode].length;
+        repasoCounter.textContent = count + "/" + cantidad;
+    }
+
+    // 操作してたらメッセージを出す
+    else {
+        // 閉じていいのかモーダルを開く
+        enserioModal.showModal();
+
+        // 枠の外クリックでモーダル閉じる操作
+        enserioModal.addEventListener('click', (event) => {
+            if (event.target === dialogContainer) {
+                return;
+            }
+            else if (event.target === enserioModal) {
+                enserioModal.close();
+                modalInput.focus();
+            }
+        });
+
+        const salgoButton = document.getElementById("confirm-yes");
+        const noSalgoButton = document.getElementById("confirm-no");
+
+        // Salir押したらどっちのモーダルも閉じる
+        salgoButton.addEventListener("click", function () {
+            repasarModal.classList.remove("modal-open");
+            setTimeout(function () {
+                repasarModal.close();
+                input.focus();
+            }, 100);
+
+            enserioModal.close();
+            clearResult();
+            clearModalResult();
+            count = 1;
+            equivocadosList = JSON.parse(sessionStorage.getItem("equivocadosList"));
+            cantidad = equivocadosList[currentMode].length;
+            repasoCounter.textContent = count + "/" + cantidad;
+        })
+
+        // Continuar押したら閉じていいのかモーダルだけ閉じる
+        noSalgoButton.addEventListener("click", function () {
+            enserioModal.close();
+            modalInput.focus();
+        })
+    }
 });
 
 // かなモード表示
-let modalModeDisplay = document.getElementById("modal-mode-display");
+const modalModeDisplay = document.getElementById("modal-mode-display");
 modalModeDisplay.textContent = modeCode[currentMode];
 
 // 間違えたかなを取得
@@ -364,27 +480,32 @@ let modalEquivocado = equivocadosList[currentMode][0];
 let modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
 
 // 間違えたかなを表示
-let modalQuestion = document.getElementById("modal-question");
+const modalQuestion = document.getElementById("modal-question");
 modalQuestion.textContent = modalEquivocado;
 
 // カウンターを取得し設定
-let repasoCounter = document.getElementById("repaso-counter");
+const repasoCounter = document.getElementById("repaso-counter");
 let count = 1;
 let cantidad = equivocadosList[currentMode].length;
 
 // ボタンの挙動
-let modalCheckButton = document.getElementById("modal-checkButton");
-let modalResultCorrecto = document.getElementById("modal-result-correcto");
-let modalResultIncorrecto = document.getElementById("modal-result-incorrecto");
-let modalInput = document.getElementById("modal-answer");
-let modalResultMuyBien = document.getElementById("modal-result-muybien");
-let modalResultError = document.getElementById("modal-result-error");
-let modalMistake = document.getElementById("modal-mistake-kana");
-let modalRespuestaCorrecta = document.getElementById("modal-respuesta-correcta");
-let modalTuRespuesta = document.getElementById("modal-tu-respuesta");
-let modalYourAnswer = document.getElementById("modal-yourAnswer");
-let modalCorrectAnswer = document.getElementById("modal-correctAnswer");
+const modalCheckButton = document.getElementById("modal-checkButton");
+const modalResultCorrecto = document.getElementById("modal-result-correcto");
+const modalResultIncorrecto = document.getElementById("modal-result-incorrecto");
+const modalInput = document.getElementById("modal-answer");
+const modalResultMuyBien = document.getElementById("modal-result-muybien");
+const modalResultError = document.getElementById("modal-result-error");
+const modalMistake = document.getElementById("modal-mistake-kana");
+const modalRespuestaCorrecta = document.getElementById("modal-respuesta-correcta");
+const modalTuRespuesta = document.getElementById("modal-tu-respuesta");
+const modalYourAnswer = document.getElementById("modal-yourAnswer");
+const modalCorrectAnswer = document.getElementById("modal-correctAnswer");
 let modalEquivocadosList = [];
+
+// 続ける？モーダルの用意
+const continuasModal = document.getElementById("continuas");
+const continuasYes = document.getElementById("continuas-confirm-yes");
+const continuasNo = document.getElementById("continuas-confirm-no");
 
 modalCheckButton.addEventListener("click", function () {
 
@@ -399,6 +520,9 @@ modalCheckButton.addEventListener("click", function () {
     if (modalRespuesta.answers.includes(modalInput.value.trim().toLowerCase())) {
         clearModalResult();
         modalResultMuyBien.style.display = "flex";
+        modalResultMuyBien.classList.remove("correcto-mensaje");
+        modalResultMuyBien.offsetWidth;
+        modalResultMuyBien.classList.add("correcto-mensaje");
         do { mensaje = muybienMensaje[Math.floor(Math.random() * muybienMensaje.length)]; } while (mensajeUsado.includes(mensaje));
         modalResultCorrecto.textContent = mensaje;
         mensajeUsado.push(mensaje);
@@ -409,6 +533,9 @@ modalCheckButton.addEventListener("click", function () {
     else {
         modalResultMuyBien.style.display = "none";
         modalResultError.style.display = "flex";
+        modalResultError.classList.remove("incorrecto-mensaje");
+        modalResultError.offsetWidth;
+        modalResultError.classList.add("incorrecto-mensaje");
         modalResultIncorrecto.textContent = "Incorrecto...";
         modalResultCorrecto.textContent = "";
         modalMistake.textContent = modalEquivocado;
@@ -441,14 +568,12 @@ modalCheckButton.addEventListener("click", function () {
 
     // 不正解をequivocadosListにコピー
     else if (equivocadosList[currentMode].length === 0 && modalEquivocadosList.length > 0) {
-        equivocadosList[currentMode] = modalEquivocadosList;
-        modalEquivocadosList = [];
-        modalEquivocado = equivocadosList[currentMode][0];
-        modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
-        modalQuestion.textContent = modalEquivocado;
-        count = 1;
-        cantidad = equivocadosList[currentMode].length;
-        repasoCounter.textContent = count + "/" + cantidad;
+
+        // これがないとすぐにモーダルが閉じちゃう
+        setTimeout(() => {
+            continuasModal.showModal();
+            continuasModal.classList.add("modal-open");
+        }, 10);
     }
 
     // 復習が終了したら
@@ -465,11 +590,15 @@ modalCheckButton.addEventListener("click", function () {
         letterButtonContainer.style.maxHeight = "0px";
         letterButtonContainer.style.transition = "max-height 0.2s ease";
         equivocadoArrow.style.transform = "rotate(0deg)";
+        equivocadoListDisplay.innerHTML = "";
 
         // いろいろなもののクリア
         clearResult();
         clearModalResult();
         count = 1;
+
+        // 入力欄にフォーカス
+        input.focus()
     }
 });
 
@@ -505,3 +634,59 @@ function clearModalResult() {
     modalRespuestaCorrecta.style.display = "none";
     modalCorrectAnswer.textContent = "";
 }
+
+// 間違えた問題をspanにして追加する
+function setEquivocadosList() {
+    equivocadoListDisplay.innerHTML = "";
+
+    equivocadosList[currentMode].forEach(function (equivocado) {
+        let character = document.createElement("span");
+        character.className = "equivocado-character";
+        character.textContent = equivocado;
+        equivocadoListDisplay.appendChild(character);
+    });
+}
+
+// Yesボタンを押したときの挙動
+continuasYes.addEventListener("click", function () {
+    continuasModal.classList.remove("modal-open");
+    setTimeout(function () {
+        continuasModal.close();
+    }, 100);
+    modalInput.focus();
+    equivocadosList[currentMode] = modalEquivocadosList;
+    modalEquivocado = equivocadosList[currentMode][0];
+    modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
+    modalQuestion.textContent = modalEquivocado;
+    count = 1;
+    cantidad = equivocadosList[currentMode].length;
+    repasoCounter.textContent = count + "/" + cantidad;
+    sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+    setEquivocadosList();
+    equivocados.textContent = "Respuestas incorrectas (" + cantidad + ")";
+    modalEquivocadosList = [];
+});
+
+// Noボタンを押したときの挙動
+continuasNo.addEventListener("click", function () {
+    repasarModal.classList.remove("modal-open");
+    continuasModal.classList.remove("modal-open");
+    setTimeout(function () {
+        repasarModal.close();
+        continuasModal.close();
+        input.focus();
+    }, 100);
+    clearResult();
+    clearModalResult();
+    equivocadosList[currentMode] = modalEquivocadosList;
+    count = 1;
+    cantidad = equivocadosList[currentMode].length;
+    repasoCounter.textContent = count + "/" + cantidad;
+    sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+    setEquivocadosList();
+    equivocados.textContent = "Respuestas incorrectas (" + cantidad + ")";
+    modalEquivocadosList = [];
+    letterButtonContainer.style.maxHeight = "0px";
+    letterButtonContainer.style.transition = "max-height 0.2s ease";
+    equivocadoArrow.style.transform = "rotate(0deg)";
+});
