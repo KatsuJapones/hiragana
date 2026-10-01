@@ -92,6 +92,7 @@ body {
 }
 
 body {
+    font-family: Arial, sans-serif;
     text-align: center;
     background: linear-gradient(to bottom,
             #cdebf9,
@@ -208,6 +209,7 @@ h2 {
 .streak {
     display: flex;
     justify-content: center;
+    align-items: center;
     background: var(--backgroundLight);
     border-radius: 16px;
     padding: 16px 24px;
@@ -216,15 +218,11 @@ h2 {
 }
 
 .fire {
-    width: 29px;
-    height: 36px;
-    transform: translateY(10px);
+    width: 20%;
 }
 
 .clown {
-    width: 43px;
-    height: 36px;
-    transform: translateY(10px);
+    width: 25%;
 }
 
 .make-it-column {
@@ -323,7 +321,7 @@ h2 {
     border-radius: 8px;
     padding: 8px 16px;
     width: 70%;
-    margin: 8px auto;
+    margin: 4px auto;
 }
 
 #answer:focus,
@@ -876,39 +874,42 @@ input::placeholder {
     }
 
     /* ======== Streak処理 ======== */
-    .fire {
-        width: 14.5px;
-        height: 18px;
-    }
-
-    .clown {
-        width: 21.5px;
-        height: 18px;
-    }
-
     .streak {
         margin-top: 16px;
-        width: 42%;
+        width: 44%;
         padding: 8px 12px;
+        gap: 12px;
     }
 
     /* ======== Question Window ======== */
     #question-window {
         width: 85%;
+        margin: 16px auto;
+        padding: 16px 0;
+    }
+
+    #question,
+    #modal-question {
+        line-height: 1;
+        margin: 8px auto;
     }
 
     #answer {
         width: 85%;
         font-size: 16px;
+        margin: 0;
     }
 
     #equivocado-container {
         max-width: 90%;
+        margin: 0;
+        margin-top: 8px;
     }
 
     /* ======== ひらがなとカタカナ変更スイッチ ======== */
     #switch-container {
         width: 60%;
+        margin: 0;
     }
 
     /* ======== 復習モーダル ======== */
