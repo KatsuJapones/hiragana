@@ -97,22 +97,65 @@
                     </div>
                 </div>
             </div>
+
+            <!-- リザルトモーダル -->
             <dialog id="result-modal">
-                <div id="result-header">
-                    <h2>Resultado</h2>
-                    <p>Terminaste todas las letras!</p>
-                </div>
-                <div id="estatistica">
-                    <div id="correctos-incorrectos">
-                        <p id="los-correctos"></p>
-                        <p id="los-incorrectos"></p>
+                <div class="scroller">
+                    <header id="result-header">
+                        <h2>Resultado</h2>
+                        <p>Terminaste todas las letras!</p>
+                    </header>
+                    <div id="estatistica">
+                        <div class="make-it-row">
+                            <svg width="120" height="120">
+                                <circle id="background-circle" cx="60" cy="60" r="50" fill="none" stroke=""
+                                    stroke-width="12"></circle>
+                                <circle id="progress-circle" cx="60" cy="60" r="50" fill="none" stroke=""
+                                    stroke-width="12" stroke-linecap="round"></circle>
+                            </svg>
+                            <div class="make-it-column">
+                                <p id="cuanto"><span id="cuanto-correcto"></span><span id="length"></span></p>
+                                <p id="porcentaje"></p>
+                            </div>
+                        </div>
                     </div>
-                    <p id="porcentaje"></p>
-                    <p id="los-equivocados"></p>
-                    <button id="result-salir">Salir</button>
+                    <div id="correctos-incorrectos">
+                        <div class="resultados resultado-correcto">
+                            <img src="correcto.png">
+                            <div class="make-it-column">
+                                <p class="message">Correctos</p>
+                                <p id="los-correctos" class="number"></p>
+                            </div>
+                        </div>
+                        <div class="resultados resultado-incorrecto">
+                            <img src="incorrecto.png">
+                            <div class="make-it-column">
+                                <p class="message">Incorrectos</p>
+                                <p id="los-incorrectos" class="number"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="result-mensaje"></p>
+
+                    <!-- 間違えた問題の表示 -->
+                    <div class="center">
+                        <div id="result-equivocado-container">
+                            <button id="result-equivocado-button">
+                                <span id="result-equivocado"></span><span id="result-equivocado-arrow"></span>
+                            </button>
+                            <div class="result-letter-button-container">
+                                <div id="result-equivocado-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="result-button">
+                        <button id="result-repasar">Repasar</button>
+                        <button id="result-salir">Salir</button>
+                    </div>
                 </div>
             </dialog>
         </div>
+
         <!-- モード変換スイッチ -->
         <div class="center">
             <div id="switch-container">
@@ -123,75 +166,75 @@
                 <div id="switch-glider"></div>
             </div>
         </div>
+    </div>
 
-        <!-- 復習モーダル -->
-        <dialog id="repasar-modal">
-            <div id="modal-header">
-                <h2>Repaso</h2>
-                <h3>Intenta de nuevo las que te equivocaste!</h3>
+    <!-- 復習モーダル -->
+    <dialog id="repasar-modal">
+        <div id="modal-header">
+            <h2>Repaso</h2>
+            <h3>Intenta de nuevo las que te equivocaste!</h3>
+        </div>
+        <!-- これはポジションで固定する（ばつ） -->
+        <button id="salir-modal"><i class="fa-solid fa-xmark fa-fw salir"></i></button>
+
+        <!-- Confirm Modal -->
+        <dialog id="enserio-sales">
+            <div id="dialog-container">
+                <div id="seguro-cuestion">
+                    <i class="fa-solid fa-triangle-exclamation fa-fw warning"></i>
+                    <h4>¿Seguro que quieres salir?</h4>
+                </div>
+                <p id="confirm-mensaje"></p>
+                <button id="confirm-no">Continuar</button>
+                <button id="confirm-yes">Sí, salir</button>
             </div>
-            <!-- これはポジションで固定する（ばつ） -->
-            <button id="salir-modal"><i class="fa-solid fa-xmark fa-fw salir"></i></button>
-
-            <!-- Confirm Modal -->
-            <dialog id="enserio-sales">
-                <div id="dialog-container">
-                    <div id="seguro-cuestion">
-                        <i class="fa-solid fa-triangle-exclamation fa-fw warning"></i>
-                        <h4>¿Seguro que quieres salir?</h4>
-                    </div>
-                    <p>Si abandonas ahora, las preguntas que ya respondiste bien seguirán en la lista de incorrectas.
-                    </p>
-                    <button id="confirm-no">Continuar</button>
-                    <button id="confirm-yes">Sí, salir</button>
-                </div>
-            </dialog>
-
-            <!-- モーダルの質問ウィンドウ -->
-            <div id="modal-window">
-                <p id="repaso-counter"></p>
-                <p id="modal-mode-display">ひらがな</p>
-                <p id="modal-question">あ</p>
-
-                <!-- 入力欄 -->
-                <input id="modal-answer" type="text" placeholder="Escribe tu respuesta...">
-
-                <button id="modal-checkButton"></button>
-
-                <!-- 答えと正解 -->
-                <div id="modal-result-window">
-
-                    <!-- 正解時 -->
-                    <div id="modal-result-muybien">
-                        <i class="fa-solid fa-check fa-fw correcto"></i>
-                        <p id="modal-result-correcto" class="correcto result"></p>
-                    </div>
-
-                    <!-- 不正解時 -->
-                    <div id="modal-result-error">
-                        <i class="fa-solid fa-xmark fa-fw incorrecto"></i>
-                        <p id="modal-result-incorrecto" class="incorrecto result"></p>
-                    </div>
-                    <p id="modal-mistake-kana" class="incorrecto"></p>
-                    <p id="modal-tu-respuesta" class="incorrecto">Tu respuesta: <span id="modal-yourAnswer"
-                            class="bold"></span></p>
-                    <p id="modal-respuesta-correcta" class="incorrecto">Respuesta correcta: <span
-                            id="modal-correctAnswer" class="bold"></span></p>
-                </div>
-            </div>
-
-            <!-- 続ける？モーダル -->
-            <dialog id="continuas">
-                <div id="buen-trabajo">
-                    <i class="fa-solid fa-check fa-fw"></i>
-                    <h4>¡Buen trabajo!</h4>
-                </div>
-                <p>¿Quieres repasar las que te equivocaste ahora?</p>
-                <button id="continuas-confirm-yes">Sí, repasar</button>
-                <button id="continuas-confirm-no">No, ir al inicio</button>
-            </dialog>
         </dialog>
-        <script src="./Kana.js"></script>
+
+        <!-- モーダルの質問ウィンドウ -->
+        <div id="modal-window">
+            <p id="repaso-counter"></p>
+            <p id="modal-mode-display">ひらがな</p>
+            <p id="modal-question">あ</p>
+
+            <!-- 入力欄 -->
+            <input id="modal-answer" type="text" placeholder="Escribe tu respuesta...">
+
+            <button id="modal-checkButton"></button>
+
+            <!-- 答えと正解 -->
+            <div id="modal-result-window">
+
+                <!-- 正解時 -->
+                <div id="modal-result-muybien">
+                    <i class="fa-solid fa-check fa-fw correcto"></i>
+                    <p id="modal-result-correcto" class="correcto result"></p>
+                </div>
+
+                <!-- 不正解時 -->
+                <div id="modal-result-error">
+                    <i class="fa-solid fa-xmark fa-fw incorrecto"></i>
+                    <p id="modal-result-incorrecto" class="incorrecto result"></p>
+                </div>
+                <p id="modal-mistake-kana" class="incorrecto"></p>
+                <p id="modal-tu-respuesta" class="incorrecto">Tu respuesta: <span id="modal-yourAnswer"
+                        class="bold"></span></p>
+                <p id="modal-respuesta-correcta" class="incorrecto">Respuesta correcta: <span id="modal-correctAnswer"
+                        class="bold"></span></p>
+            </div>
+        </div>
+
+        <!-- 続ける？モーダル -->
+        <dialog id="continuas">
+            <div id="buen-trabajo">
+                <i class="fa-solid fa-check fa-fw"></i>
+                <h4>¡Buen trabajo!</h4>
+            </div>
+            <p>¿Quieres repasar las que te equivocaste ahora?</p>
+            <button id="continuas-confirm-yes">Sí, repasar</button>
+            <button id="continuas-confirm-no">No, ir al inicio</button>
+        </dialog>
+    </dialog>
+    <script src="./Kana.js"></script>
 </body>
 
 </html>
