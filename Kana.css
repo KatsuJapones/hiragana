@@ -583,6 +583,7 @@ input::placeholder {
     max-height: calc(70dvh - 16px);
     border-radius: 16px;
     margin: 8px 0;
+    outline: none;
 }
 
 #result-modal.modal-open {
@@ -613,17 +614,38 @@ input::placeholder {
     margin: 0 auto;
 }
 
+#estatistica svg {
+    max-width: none;
+    flex-shrink: 0;
+}
+
 .make-it-row {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
     padding: 16px 0;
+    gap: 2rem;
 }
 
-#progress-circle {
+.circle-container {
+    position: relative;
+}
+
+#progress-circle,
+#background-circle {
     transform: rotate(-90deg);
     transform-origin: center;
+}
+
+.inside-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#cuanto {
+    white-space: nowrap;
 }
 
 #cuanto-correcto {
@@ -648,12 +670,17 @@ input::placeholder {
 
 #correctos-incorrectos {
     display: flex;
+    position: relative;
+    flex-direction: column;
     justify-content: center;
-    gap: 3rem;
+    width: 30%;
+    gap: 1rem;
 }
 
 #correctos-incorrectos img {
+    position: absolute;
     width: 15%;
+    left: 10%;
 }
 
 .resultados {
@@ -663,7 +690,7 @@ input::placeholder {
     gap: 1.4rem;
     padding: 8px 0;
     border-radius: 32px;
-    width: 30%;
+    width: 100%;
 }
 
 .resultado-correcto {
@@ -674,6 +701,10 @@ input::placeholder {
 .resultado-incorrecto {
     background: #faeceb;
     border: 1px solid #efd1d0;
+}
+
+.resultado-mensaje {
+    transform: translateX(1rem);
 }
 
 .message {
@@ -688,7 +719,6 @@ input::placeholder {
 }
 
 #result-mensaje {
-    margin-top: 16px;
     color: #a1b2c3;
     font-weight: bold;
 }
@@ -699,7 +729,7 @@ input::placeholder {
 }
 
 #result-button button {
-    display: inline-block;
+    display: flex;
     cursor: pointer;
     user-select: none;
     border-radius: 32px;
@@ -709,6 +739,9 @@ input::placeholder {
     border: none;
     color: var(--backgroundColor);
     font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
 }
 
 #result-repasar {

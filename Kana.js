@@ -102,6 +102,7 @@ function kanaMode(mode) {
     maxStreakDisplay.textContent = maxStreak[currentMode];
     equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
     setEquivocadosList();
+    input.value = "";
 
     // まだ間違えてない場合はしまう
     if (equivocadosList[currentMode].length === 0) {
@@ -336,7 +337,7 @@ checkButton.addEventListener("click", function () {
         losIncorrectos.textContent = equivocadosList[currentMode].length;
         cuantoCorrecto.textContent = (kana.length - equivocadosList[currentMode].length);
         lengthContent.textContent = " / " + kana.length;
-        porcentaje.textContent = "Precisión " + percentage + "%";
+        porcentaje.textContent = percentage + "%";
         isDoingResult = true;
         progressCircle.style.strokeDasharray = circumference;
         progressCircle.style.strokeDashoffset = circumference * (1 - percentage / 100);
@@ -349,7 +350,7 @@ checkButton.addEventListener("click", function () {
             resultEquivocadoListDisplay.innerHTML = "";
 
             // 消えたボタンの再表示
-            resultRepasar.style.display = "inline-block";
+            resultRepasar.style.display = "flex";
 
             equivocadosList[currentMode].forEach(function (equivocado) {
                 let character = document.createElement("span");
@@ -367,7 +368,6 @@ checkButton.addEventListener("click", function () {
             resultMensaje.textContent = "¡Perfecto! ¡Dominado por completo!";
             porcentaje.style.color = "#f5c84b";
             progressCircle.style.stroke = "#f5c84b";
-            backgroundCircle.style.stroke = "#d7ebfd";
 
             // 全問正解の場合repasarボタンを消す
             resultRepasar.style.display = "none";

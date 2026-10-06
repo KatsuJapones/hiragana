@@ -91,7 +91,7 @@
                     <div class="letter-button-container">
                         <div id="equivocado-list"></div>
                         <button id="repasar">
-                            <i class="fa-solid fa-rotate fa-fw rotate"></i>
+                            <i class="fa-solid fa-arrow-rotate-right fa-fw rotate"></i>
                             <span id="repasar-button">Repasar</span>
                         </button>
                     </div>
@@ -107,31 +107,33 @@
                     </header>
                     <div id="estatistica">
                         <div class="make-it-row">
-                            <svg width="120" height="120">
-                                <circle id="background-circle" cx="60" cy="60" r="50" fill="none" stroke=""
-                                    stroke-width="12"></circle>
-                                <circle id="progress-circle" cx="60" cy="60" r="50" fill="none" stroke=""
-                                    stroke-width="12" stroke-linecap="round"></circle>
-                            </svg>
-                            <div class="make-it-column">
-                                <p id="cuanto"><span id="cuanto-correcto"></span><span id="length"></span></p>
-                                <p id="porcentaje"></p>
+                            <div class="circle-container">
+                                <svg width="180" height="180">
+                                    <circle id="background-circle" cx="90" cy="90" r="80" fill="none" stroke=""
+                                        stroke-width="12"></circle>
+                                    <circle id="progress-circle" cx="90" cy="90" r="80" fill="none" stroke=""
+                                        stroke-width="12" stroke-linecap="round"></circle>
+                                </svg>
+                                <div class="make-it-column inside-circle">
+                                    <p id="cuanto"><span id="cuanto-correcto"></span><span id="length"></span></p>
+                                    <p id="porcentaje"></p>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div id="correctos-incorrectos">
-                        <div class="resultados resultado-correcto">
-                            <img src="correcto.png">
-                            <div class="make-it-column">
-                                <p class="message">Correctos</p>
-                                <p id="los-correctos" class="number"></p>
-                            </div>
-                        </div>
-                        <div class="resultados resultado-incorrecto">
-                            <img src="incorrecto.png">
-                            <div class="make-it-column">
-                                <p class="message">Incorrectos</p>
-                                <p id="los-incorrectos" class="number"></p>
+                            <div id="correctos-incorrectos">
+                                <div class="resultados resultado-correcto">
+                                    <img src="correcto.png">
+                                    <div class="make-it-column resultado-mensaje">
+                                        <p class="message">Correctos</p>
+                                        <p id="los-correctos" class="number"></p>
+                                    </div>
+                                </div>
+                                <div class="resultados resultado-incorrecto">
+                                    <img src="incorrecto.png">
+                                    <div class="make-it-column resultado-mensaje">
+                                        <p class="message">Incorrectos</p>
+                                        <p id="los-incorrectos" class="number"></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -149,9 +151,16 @@
                         </div>
                     </div>
                     <div id="result-button">
-                        <button id="result-repasar">Repasar</button>
-                        <button id="result-salir">Salir</button>
+                        <button id="result-repasar">
+                            <i class="fa-solid fa-arrow-rotate-right fa-fw rotate"></i>
+                            <span>Repasar</span>
+                        </button>
+                        <button id="result-salir">
+                            <i class="fa-solid fa-arrow-right-from-bracket fa-fw door"></i>
+                            <span>Salir</span>
+                        </button>
                     </div>
+                    <p id="warning-message">Al salir, ya no podrás repasar las letras que fallaste.</p>
                 </div>
             </dialog>
         </div>
