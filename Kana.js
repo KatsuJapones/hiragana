@@ -619,8 +619,16 @@ modalCheckButton.addEventListener("click", function () {
         clearModalResult();
         count = 1;
 
+        // 新しい問題をだす
+        do {
+            randomIndex = Math.floor(Math.random() * kana.length);
+        } while (usedChars[currentMode].includes(randomIndex))
+        randomKana = kana[randomIndex].char[currentMode];
+        question.textContent = randomKana;
+
         // 入力欄にフォーカス
-        input.focus()
+        input.focus();
+        input.value = "";
     }
 });
 

@@ -100,6 +100,10 @@ body {
     overflow-y: scroll;
 }
 
+body:has(dialog[open]) {
+    overflow: hidden;
+}
+
 img {
     user-select: none;
     pointer-events: none;
@@ -646,6 +650,7 @@ input::placeholder {
 
 #cuanto {
     white-space: nowrap;
+    transform: translateX(-0.12rem);
 }
 
 #cuanto-correcto {
@@ -758,6 +763,20 @@ input::placeholder {
 
 #result-salir:hover {
     background: #ffc5c5;
+}
+
+.warning-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #a1b2c3;
+    background: #efefef;
+    width: max-content;
+    padding: 8px 16px;
+    margin: 4px auto;
+    border-radius: 24px;
+    gap: 0.5rem;
+    font-size: 0.9rem;
 }
 
 /* ================================ 
