@@ -84,11 +84,16 @@ body {
     overscroll-behavior: none;
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 :root {
     --textColor: #00036f;
     --textColorLight: #4575ff;
     --backgroundLight: #ecf4ff;
     --backgroundColor: #fafafa;
+    --questionWidth: 80%;
 }
 
 body {
@@ -97,7 +102,6 @@ body {
     background: linear-gradient(to bottom,
             #cdebf9,
             #eaf9ff);
-    overflow-y: scroll;
 }
 
 body:has(dialog[open]) {
@@ -221,10 +225,14 @@ h2 {
 ================================ */
 #racha {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    width: calc(var(--questionWidth) - 10%);
+    margin: 0 auto;
+    gap: 8px;
 }
 
 .streak-message {
+    width: max-content;
     color: #75a5ca;
 }
 
@@ -242,8 +250,9 @@ h2 {
     background: var(--backgroundLight);
     border-radius: 16px;
     padding: 16px 24px;
-    gap: 24px;
-    width: 25%;
+    gap: 10%;
+    width: max-content;
+    max-width: 220px;
 }
 
 .fire {
@@ -311,9 +320,10 @@ h2 {
         question-window 
 ================================ */
 #question-window {
+    position: relative;
     box-shadow: 0 0 7px 7px #e0effa;
     border-radius: 16px;
-    width: 80%;
+    width: var(--questionWidth);
     margin: 24px auto;
     padding: 24px 0;
 }
@@ -327,6 +337,18 @@ h2 {
     width: max-content;
     padding: 4px 4%;
     margin: 0 auto;
+}
+
+#question-counter {
+    display: inline-block;
+    position: absolute;
+    top: 24px;
+    right: 15%;
+    color: var(--textColorLight);
+    font-weight: bold;
+    padding: 4px 4%;
+    border-radius: 16px;
+    background: var(--backgroundLight);
 }
 
 #question,
@@ -465,6 +487,11 @@ input::placeholder {
 /* ================================ 
     　　復習モード用のあれこれ 
 ================================ */
+.center {
+    display: flex;
+    justify-content: center;
+}
+
 #equivocado-container,
 #result-equivocado-container {
     display: flex;
@@ -595,20 +622,20 @@ input::placeholder {
     opacity: 1;
 }
 
-#result-header {
+.result-header {
     display: flex;
     flex-direction: column;
     row-gap: 0;
     padding: 16px 0 0 0;
 }
 
-#result-header h2 {
-    font-size: 1.2rem;
+#result-up-h2 {
+    font-size: 1.4rem;
     color: var(--textColor);
     font-weight: bold;
 }
 
-#result-header p {
+#result-up-p {
     color: #a1b2c3;
     font-weight: 500;
 }
@@ -619,6 +646,8 @@ input::placeholder {
 }
 
 #estatistica svg {
+    width: clamp(120px, 40vw, 180px);
+    height: auto;
     max-width: none;
     flex-shrink: 0;
 }
@@ -627,7 +656,10 @@ input::placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 16px 0;
+}
+
+.estatistica {
+    padding: 16px 0 4px 0;
     gap: 2rem;
 }
 
@@ -680,6 +712,7 @@ input::placeholder {
     justify-content: center;
     width: 30%;
     gap: 1rem;
+    min-width: 130px;
 }
 
 #correctos-incorrectos img {
@@ -740,7 +773,8 @@ input::placeholder {
     border-radius: 32px;
     padding: 8px 0px;
     width: 22%;
-    margin: 8px 16px;
+    min-width: 120px;
+    margin: 16px;
     border: none;
     color: var(--backgroundColor);
     font-weight: bold;
@@ -765,15 +799,16 @@ input::placeholder {
     background: #ffc5c5;
 }
 
-.warning-message {
+#warning-message {
     display: flex;
     justify-content: center;
     align-items: center;
     color: #a1b2c3;
     background: #efefef;
+    max-width: 80%;
     width: max-content;
     padding: 8px 16px;
-    margin: 4px auto;
+    margin: 4px auto 16px auto;
     border-radius: 24px;
     gap: 0.5rem;
     font-size: 0.9rem;
@@ -782,13 +817,15 @@ input::placeholder {
 /* ================================ 
     ひらがなとカタカナ変更スイッチ 
 ================================ */
-.center {
+.mode-result-row {
     display: flex;
     justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 #switch-container {
-    margin: 24px auto;
+    margin: 16px auto 40px auto;
     position: relative;
     width: 30%;
     display: flex;
@@ -808,7 +845,7 @@ input::placeholder {
     transition: color 0.2s ease, background 0.2s ease;
     color: #aabbcc;
     font-weight: bold;
-    padding: 8px 8px;
+    padding: 8px;
 }
 
 .switch-label:hover {
@@ -846,6 +883,31 @@ input::placeholder {
 
 #katakana-switch:checked~#switch-glider {
     transform: translateX(100%);
+}
+
+/* ================================ 
+         　結果表示ボタン
+================================ */
+#ver-progreso {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: var(--backgroundColor);
+    border-radius: 24px;
+    box-shadow: 0 0 7px 7px #e0effa;
+    font-weight: bold;
+    padding: 8px 24px;
+    gap: 10%;
+    position: absolute;
+    right: 10%;
+    color: var(--textColorLight);
+    user-select: none;
+    margin: 16px auto 40px auto;
+}
+
+#ver-progreso p {
+    white-space: nowrap;
 }
 
 /* ================================ 
@@ -1098,6 +1160,10 @@ input::placeholder {
         font-size: 87.5%;
     }
 
+    :root {
+        --questionWidth: 90%;
+    }
+
     body {
         background: var(--backgroundColor);
     }
@@ -1117,16 +1183,16 @@ input::placeholder {
     }
 
     /* ======== Streak処理 ======== */
+    #racha {
+        width: var(--questionWidth);
+    }
+
     .streak {
         margin-top: 16px;
-        width: 44%;
-        padding: 8px 12px;
-        gap: 12px;
     }
 
     /* ======== Question Window ======== */
     #question-window {
-        width: 85%;
         margin: 16px auto;
         padding: 16px 0;
     }
@@ -1147,6 +1213,15 @@ input::placeholder {
         max-width: 90%;
         margin: 0;
         margin-top: 8px;
+    }
+
+    /* ======== リザルトモーダル ======== */
+    #result-modal {
+        width: 90%;
+    }
+
+    .estatistica {
+        gap: 1rem;
     }
 
     /* ======== ひらがなとカタカナ変更スイッチ ======== */

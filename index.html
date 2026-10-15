@@ -54,8 +54,8 @@
         <!-- 問題と答えとミス表示とか -->
         <div id="question-window">
             <p id="mode-display">ひらがな</p>
+            <p id="question-counter"></p>
             <p id="question">あ</p>
-            <p id="veces"></p>
 
             <!-- 入力欄 -->
             <input id="answer" type="text" placeholder="Escribe tu respuesta...">
@@ -100,15 +100,15 @@
 
             <!-- リザルトモーダル -->
             <dialog id="result-modal">
-                <div class="scroller">
-                    <header id="result-header">
-                        <h2>Resultado</h2>
-                        <p>Terminaste todas las letras!</p>
+                <div class="scroller dialog-container">
+                    <header class="result-header">
+                        <h2 id="result-up-h2">Resultado</h2>
+                        <p id="result-up-p">Terminaste todas las letras!</p>
                     </header>
                     <div id="estatistica">
-                        <div class="make-it-row">
+                        <div class="make-it-row estatistica">
                             <div class="circle-container">
-                                <svg width="180" height="180">
+                                <svg viewBox="0 0 180 180" width="180" height="180">
                                     <circle id="background-circle" cx="90" cy="90" r="80" fill="none" stroke=""
                                         stroke-width="12"></circle>
                                     <circle id="progress-circle" cx="90" cy="90" r="80" fill="none" stroke=""
@@ -160,7 +160,7 @@
                             <span>Salir</span>
                         </button>
                     </div>
-                    <div class="warning-message">
+                    <div id="warning-message">
                         <i class="fa-solid fa-exclamation fa-fw"></i>
                         <p>Al salir, ya no podrás repasar las letras que fallaste.</p>
                     </div>
@@ -169,7 +169,7 @@
         </div>
 
         <!-- モード変換スイッチ -->
-        <div class="center">
+        <div class="mode-result-row">
             <div id="switch-container">
                 <input type="radio" id="hiragana-switch" name="switch" checked onclick=kanaMode(0)>
                 <label for="hiragana-switch" class="switch-label left-radius">Hiragana</label>
@@ -177,6 +177,12 @@
                 <label for="katakana-switch" class="switch-label right-radius">Katakana</label>
                 <div id="switch-glider"></div>
             </div>
+
+            <!-- 結果表示ボタン -->
+            <button id="ver-progreso">
+                <i class="fa-solid fa-chart-simple fa-fw"></i>
+                <p>Ver progreso</p>
+            </button>
         </div>
     </div>
 

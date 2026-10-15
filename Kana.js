@@ -83,6 +83,12 @@ let currentMode = 0;
 let modeCode = ["ひらがな", "カタカナ"];
 const modeDisplay = document.getElementById("mode-display");
 
+// 何問目ですか？
+const questionCounter = document.getElementById("question-counter");
+let currentQuestion = JSON.parse(sessionStorage.getItem("currentQuestion")) || [1, 1];
+let howManyQuestion = kana.length;
+questionCounter.textContent = currentQuestion[currentMode] + "/" + howManyQuestion;
+
 // ランダムなかなを生成
 let randomIndex = Math.floor(Math.random() * kana.length);
 let randomKana = kana[randomIndex].char[currentMode];
@@ -103,7 +109,12 @@ function kanaMode(mode) {
 
         equivocadosList[mode] = [];
         sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+
+        currentQuestion[currentMode] = 1;
+        sessionStorage.setItem("currentQuestion", JSON.stringify(currentQuestion));
+        questionCounter.textContent = currentQuestion[currentMode] + "/" + howManyQuestion;
     }
+    questionCounter.textContent = currentQuestion[mode] + "/" + howManyQuestion;
     modeDisplay.textContent = modeCode[mode];
     resultMuyBien.style.display = "none";
     resultError.style.display = "none";
@@ -170,6 +181,9 @@ if (usedChars[currentMode].length === kana.length) {
     sessionStorage.setItem("correctasIniciales", JSON.stringify(correctasIniciales));
     equivocadosList[currentMode] = [];
     sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+    currentQuestion[currentMode] = 1;
+    sessionStorage.setItem("currentQuestion", JSON.stringify(currentQuestion));
+    questionCounter.textContent = currentQuestion[currentMode] + "/" + howManyQuestion;
 }
 
 // 初期表示で未出題のかなを選ぶ
@@ -217,6 +231,8 @@ const correctAnswer = document.getElementById("correctAnswer");
 
 // リザルトモーダルの準備
 const resultModal = document.getElementById("result-modal");
+const resultUpH2 = document.getElementById("result-up-h2");
+const resultUpP = document.getElementById("result-up-p");
 const losCorrectos = document.getElementById("los-correctos");
 const losIncorrectos = document.getElementById("los-incorrectos");
 const cuantoCorrecto = document.getElementById("cuanto-correcto");
@@ -230,6 +246,7 @@ const resultEquivocadoButton = document.getElementById("result-equivocado-button
 const resultEquivocados = document.getElementById("result-equivocado");
 const resultEquivocadoArrow = document.getElementById("result-equivocado-arrow");
 const resultEquivocadoListDisplay = document.getElementById("result-equivocado-list");
+const warningMessage = document.getElementById("warning-message");
 let resultLetterButtonContainer = document.querySelector(".result-letter-button-container");
 let isDoingResult = false;
 
@@ -247,6 +264,12 @@ checkButton.addEventListener("click", function () {
         input.value = "";
         return;
     }
+
+    if (currentQuestion[currentMode] < howManyQuestion) {
+        currentQuestion[currentMode]++;
+        sessionStorage.setItem("currentQuestion", JSON.stringify(currentQuestion));
+    }
+    questionCounter.textContent = currentQuestion[currentMode] + "/" + howManyQuestion;
 
     // 回答が正解と一緒だった場合
     if (kana[randomIndex].answers.includes(input.value.trim().toLowerCase())) {
@@ -348,22 +371,13 @@ checkButton.addEventListener("click", function () {
 
     // 全部使ったらリセット
     if (usedChars[currentMode].length === kana.length) {
-        let percentage = (correctasIniciales[currentMode].length / kana.length * 100).toFixed(1);
-        resultEquivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
-        // リザルトモーダルを開く
-        setTimeout(() => {
-            resultModal.showModal();
-            resultModal.classList.add("modal-open");
-        }, 10);
-
-        losCorrectos.textContent = correctasIniciales[currentMode].length;
-        losIncorrectos.textContent = kana.length - correctasIniciales[currentMode].length;
-        cuantoCorrecto.textContent = correctasIniciales[currentMode].length;
-        lengthContent.textContent = " / " + kana.length;
-        porcentaje.textContent = percentage + "%";
+        let percentage = (correctasIniciales[currentMode].length / usedChars[currentMode].length * 100).toFixed(1);
+        openResult();
+        resultModal.style.height = "70dvh";
+        resultUpH2.textContent = "Resultado";
+        resultUpP.textContent = "¡Terminaste todas las letras!";
         isDoingResult = true;
-        progressCircle.style.strokeDasharray = circumference;
-        progressCircle.style.strokeDashoffset = circumference * (1 - percentage / 100);
+
         if (equivocadosList[currentMode].length > 0) {
 
             // 間違いリストスイッチの機能保全
@@ -372,57 +386,36 @@ checkButton.addEventListener("click", function () {
             // 間違えた問題をspanにして追加する
             resultEquivocadoListDisplay.innerHTML = "";
 
-            // 消えたボタンの再表示
-            resultRepasar.style.display = "flex";
-            resultEquivocadoContainer.style.display = "flex";
-
             equivocadosList[currentMode].forEach(function (equivocado) {
                 let character = document.createElement("span");
                 character.className = "equivocado-character";
                 character.textContent = equivocado;
                 resultEquivocadoListDisplay.appendChild(character);
             });
-        }
-        else {
-            resultEquivocadoContainer.style.display = "none";
-            resultRepasar.style.display = "none";
+
+            resultRepasar.style.display = "flex";
+            resultEquivocadoContainer.style.display = "flex";
+            warningMessage.style.display = "flex";
         }
 
         // 結果に応じた変更
         if (percentage == 100.0) {
             resultMensaje.textContent = "¡Perfecto! ¡Dominado por completo!";
-            porcentaje.style.color = "#f5c84b";
-            progressCircle.style.stroke = "#f5c84b";
         }
         else if (percentage >= 90.0) {
             resultMensaje.textContent = "¡Excelente! ¡Ya casi lo dominas!";
-            porcentaje.style.color = "#0a9158";
-            progressCircle.style.stroke = "#0a9158";
-            backgroundCircle.style.stroke = "#cdece1";
         }
         else if (percentage >= 70.0) {
             resultMensaje.textContent = "¡Muy bien! ¡Buen ritmo!";
-            porcentaje.style.color = "var(--textColorLight)";
-            progressCircle.style.stroke = "var(--textColorLight)";
-            backgroundCircle.style.stroke = "#d7ebfd";
         }
         else if (percentage >= 50.0) {
             resultMensaje.textContent = "¡Un poco más de esfuerzo y lo lograrás!";
-            porcentaje.style.color = "#dfa126";
-            progressCircle.style.stroke = "#dfa126";
-            backgroundCircle.style.stroke = "#fae9ca";
         }
         else if (percentage >= 30.0) {
             resultMensaje.textContent = "¡Vas bien! ¡Sigue practicando!";
-            porcentaje.style.color = "#fc8c37";
-            progressCircle.style.stroke = "#fc8c37";
-            backgroundCircle.style.stroke = "#fcd7bf";
         }
         else {
             resultMensaje.textContent = "¡Ánimo! ¡Poco a poco vas aprendiendo!";
-            porcentaje.style.color = "#ec6573";
-            progressCircle.style.stroke = "#ec6573";
-            backgroundCircle.style.stroke = "#f6d3da";
         }
     }
 
@@ -732,6 +725,71 @@ function openRepasarModal() {
     repasoCounter.textContent = count + "/" + cantidad;
 }
 
+// リザルトモーダルを開く関数
+function openResult() {
+    let percentage = (correctasIniciales[currentMode].length / usedChars[currentMode].length * 100).toFixed(1);
+    resultEquivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
+    resultModal.style.height = "max-content";
+    resultUpH2.textContent = "Progreso";
+    resultUpP.textContent = "¡Así va tu progreso hasta ahora!";
+    // リザルトモーダルを開く
+    setTimeout(() => {
+        resultModal.showModal();
+        resultModal.classList.add("modal-open");
+    }, 10);
+
+    losCorrectos.textContent = correctasIniciales[currentMode].length;
+    losIncorrectos.textContent = usedChars[currentMode].length - correctasIniciales[currentMode].length;
+    cuantoCorrecto.textContent = correctasIniciales[currentMode].length;
+    lengthContent.textContent = " / " + usedChars[currentMode].length;
+    porcentaje.textContent = percentage + "%";
+    progressCircle.style.strokeDasharray = circumference;
+    progressCircle.style.strokeDashoffset = circumference * (1 - percentage / 100);
+    resultRepasar.style.display = "none";
+    resultEquivocadoContainer.style.display = "none";
+    warningMessage.style.display = "none";
+
+
+    // 結果に応じた変更
+    if (percentage == 100.0) {
+        porcentaje.style.color = "#f5c84b";
+        progressCircle.style.stroke = "#f5c84b";
+    }
+    else if (percentage >= 90.0) {
+        porcentaje.style.color = "#0a9158";
+        progressCircle.style.stroke = "#0a9158";
+        backgroundCircle.style.stroke = "#cdece1";
+    }
+    else if (percentage >= 70.0) {
+        porcentaje.style.color = "var(--textColorLight)";
+        progressCircle.style.stroke = "var(--textColorLight)";
+        backgroundCircle.style.stroke = "#d7ebfd";
+    }
+    else if (percentage >= 50.0) {
+        porcentaje.style.color = "#dfa126";
+        progressCircle.style.stroke = "#dfa126";
+        backgroundCircle.style.stroke = "#fae9ca";
+    }
+    else if (percentage >= 30.0) {
+        porcentaje.style.color = "#fc8c37";
+        progressCircle.style.stroke = "#fc8c37";
+        backgroundCircle.style.stroke = "#fcd7bf";
+    }
+    else if (usedChars[currentMode].length === 0) {
+        porcentaje.textContent = "---";
+        cuantoCorrecto.textContent = "---";
+        lengthContent.textContent = "";
+        porcentaje.style.color = "#a1b2c3"
+        progressCircle.style.stroke = "#a1b2c3";
+        backgroundCircle.style.stroke = "#a1b2c3";
+    }
+    else {
+        porcentaje.style.color = "#ec6573";
+        progressCircle.style.stroke = "#ec6573";
+        backgroundCircle.style.stroke = "#f6d3da";
+    }
+}
+
 // equivocadosListを開くためのボタン
 equivocadoButton.addEventListener("click", function () {
 
@@ -758,6 +816,29 @@ equivocadoButton.addEventListener("click", function () {
     }
 });
 
+// Ver progresoボタン
+const verProgreso = document.getElementById("ver-progreso");
+verProgreso.addEventListener("click", function () {
+    openResult();
+
+    // 枠の外クリックでモーダル閉じる操作
+    resultModal.addEventListener('click', (event) => {
+        if (event.target === dialogContainer) {
+            return;
+        }
+        else if (isDoingResult) {
+            return;
+        }
+        else if (event.target === resultModal) {
+            resultModal.classList.remove("modal-open");
+            setTimeout(function () {
+                resultModal.close();
+                input.focus();
+            }, 100);
+        }
+    });
+});
+
 // result-repasarボタンを押したときの挙動
 resultRepasar.addEventListener("click", function () {
     resultModal.classList.remove("modal-open");
@@ -765,6 +846,9 @@ resultRepasar.addEventListener("click", function () {
         resultModal.close();
     }, 100);
     openRepasarModal();
+    currentQuestion[currentMode] = 1;
+    sessionStorage.setItem("currentQuestion", JSON.stringify(currentQuestion));
+    questionCounter.textContent = currentQuestion[currentMode] + "/" + howManyQuestion;
     usedChars[currentMode] = [];
     sessionStorage.setItem("usedChars", JSON.stringify(usedChars));
     correctasIniciales[currentMode] = [];
@@ -778,25 +862,30 @@ resultSalir.addEventListener("click", function () {
         resultModal.close();
         input.focus();
     }, 100);
-    clearResult();
-    clearModalResult();
-    input.value = "";
-    letterButtonContainer.style.maxHeight = "0px";
-    letterButtonContainer.style.transition = "max-height 0.2s ease";
-    equivocadoArrow.style.transform = "rotate(0deg)";
-    usedChars[currentMode] = [];
-    correctasIniciales[currentMode] = [];
-    equivocadosList[currentMode] = [];
-    sessionStorage.setItem("usedChars", JSON.stringify(usedChars));
-    sessionStorage.setItem("correctasIniciales", JSON.stringify(correctasIniciales));
-    sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
-    setEquivocadosList();
-    equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
-    randomIndex = Math.floor(Math.random() * kana.length);
-    randomKana = kana[randomIndex].char[currentMode];
-    question.textContent = randomKana;
-    isDoingResult = false;
-    input.focus();
+    if (isDoingResult) {
+        clearResult();
+        clearModalResult();
+        input.value = "";
+        letterButtonContainer.style.maxHeight = "0px";
+        letterButtonContainer.style.transition = "max-height 0.2s ease";
+        equivocadoArrow.style.transform = "rotate(0deg)";
+        currentQuestion[currentMode] = 1;
+        sessionStorage.setItem("currentQuestion", JSON.stringify(currentQuestion));
+        questionCounter.textContent = currentQuestion[currentMode] + "/" + howManyQuestion;
+        usedChars[currentMode] = [];
+        correctasIniciales[currentMode] = [];
+        equivocadosList[currentMode] = [];
+        sessionStorage.setItem("usedChars", JSON.stringify(usedChars));
+        sessionStorage.setItem("correctasIniciales", JSON.stringify(correctasIniciales));
+        sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
+        setEquivocadosList();
+        equivocados.textContent = "Respuestas incorrectas (" + equivocadosList[currentMode].length + ")";
+        randomIndex = Math.floor(Math.random() * kana.length);
+        randomKana = kana[randomIndex].char[currentMode];
+        question.textContent = randomKana;
+        isDoingResult = false;
+        input.focus();
+    }
 });
 
 // resultEquivocadosListを開くためのボタン
