@@ -528,11 +528,6 @@ const modalYourAnswer = document.getElementById("modal-yourAnswer");
 const modalCorrectAnswer = document.getElementById("modal-correctAnswer");
 let modalEquivocadosList = [];
 
-// 続ける？モーダルの用意
-const continuasModal = document.getElementById("continuas");
-const continuasYes = document.getElementById("continuas-confirm-yes");
-const continuasNo = document.getElementById("continuas-confirm-no");
-
 modalCheckButton.addEventListener("click", function () {
 
     // ここに「回答を押したときの処理」を書く
@@ -858,6 +853,7 @@ verProgreso.addEventListener("click", function () {
     percentage = (correctasIniciales[currentMode].length / usedChars[currentMode].length * 100).toFixed(1);
     openResult();
     resultSet();
+    resultMensaje.textContent = "";
 
     // 枠の外クリックでモーダル閉じる操作
     resultModal.addEventListener('click', (event) => {
@@ -1023,50 +1019,3 @@ noSalgoButton.addEventListener("click", function () {
     enserioModal.close();
     modalInput.focus();
 })
-
-// Yesボタンを押したときの挙動
-continuasYes.addEventListener("click", function () {
-    continuasModal.classList.remove("modal-open");
-    setTimeout(function () {
-        continuasModal.close();
-    }, 100);
-    modalInput.focus();
-    equivocadosList[currentMode] = modalEquivocadosList;
-    modalEquivocado = equivocadosList[currentMode][0];
-    modalRespuesta = kana.find(item => item.char[currentMode] === modalEquivocado);
-    modalQuestion.textContent = modalEquivocado;
-    count = 1;
-    cantidad = equivocadosList[currentMode].length;
-    repasoCounter.textContent = count + "/" + cantidad;
-    sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
-    clearResult();
-    clearModalResult();
-    setEquivocadosList();
-    equivocados.textContent = "Respuestas incorrectas (" + cantidad + ")";
-    modalEquivocadosList = [];
-});
-
-// Noボタンを押したときの挙動
-continuasNo.addEventListener("click", function () {
-    repasarModal.classList.remove("modal-open");
-    continuasModal.classList.remove("modal-open");
-    setTimeout(function () {
-        repasarModal.close();
-        continuasModal.close();
-        input.focus();
-    }, 100);
-    clearResult();
-    clearModalResult();
-    equivocadosList[currentMode] = modalEquivocadosList;
-    count = 1;
-    cantidad = equivocadosList[currentMode].length;
-    repasoCounter.textContent = count + "/" + cantidad;
-    sessionStorage.setItem("equivocadosList", JSON.stringify(equivocadosList));
-    setEquivocadosList();
-    equivocados.textContent = "Respuestas incorrectas (" + cantidad + ")";
-    modalEquivocadosList = [];
-    isDoingResult = false;
-    letterButtonContainer.style.maxHeight = "0px";
-    letterButtonContainer.style.transition = "max-height 0.2s ease";
-    equivocadoArrow.style.transform = "rotate(0deg)";
-});
